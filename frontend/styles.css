@@ -1,0 +1,357 @@
+/* Setting HTML Elements */
+
+html {
+  background-color: #f6f9fc;
+}
+
+table {
+  width: 80%;
+}
+
+th,
+td {
+  text-align: center;
+}
+
+/* Setting Navigation Properties */
+
+#nav,
+.nav-link {
+  color: white;
+  background-color: #333;
+}
+
+#nav {
+  height: 50px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+}
+
+.nav-link {
+  padding: 14px 16px;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  background-color: #111;
+}
+
+.nav-link {
+  float: left;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* Setting Content Properties */
+
+#content {
+  height: 100%;
+  padding-top: 50px;
+  padding-bottom: 250px;
+}
+
+/* Setting Command Output Properties */
+
+#command-output {
+  display: none;
+  height: 200px;
+  overflow-y: auto;
+  color: white;
+  background-color: black;
+  position: fixed;
+  left: 0;
+  bottom: 40px;
+  width: 100%;
+  z-index: 9999;
+}
+
+/* Setting Footer Properties */
+
+#footer {
+  height: 40px;
+  color: white;
+  background-color: #333;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 9999;
+}
+
+.footer-link {
+  padding: 12px 14px;
+  width: min-content;
+  cursor: pointer;
+}
+
+/* Setting Grid Properties */
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+/* Setting Column Sizes */
+
+.col-12,
+.col-xs-12,
+.col-sm-12,
+.col-md-12,
+.col-lg-12 {
+  width: 100%;
+}
+
+.col-11,
+.col-xs-11,
+.col-sm-11,
+.col-md-11,
+.col-lg-11 {
+  width: 91%;
+}
+
+.col-10,
+.col-xs-10,
+.col-sm-10,
+.col-md-10,
+.col-lg-10 {
+  width: 83%;
+}
+
+.col-9,
+.col-xs-9,
+.col-sm-9,
+.col-md-9,
+.col-lg-9 {
+  width: 75%;
+}
+
+.col-8,
+.col-xs-8t,
+.col-lg-8 {
+  width: 66%;
+}
+
+.col-7,
+.col-xs-7,
+.col-sm-7,
+.col-md-7,
+.col-lg-7 {
+  width: 58%;
+}
+
+.col-6,
+.col-xs-6,
+.col-sm-6,
+.col-md-6,
+.col-lg-6 {
+  width: 50%;
+}
+
+.col-5,
+.col-xs-5,
+.col-sm-5,
+.col-md-5,
+.col-lg-5 {
+  width: 41%;
+}
+
+.col-4,
+.col-xs-4,
+.col-sm-4,
+.col-md-4,
+.col-lg-4 {
+  width: 33%;
+}
+
+.col-3,
+.col-xs-3,
+.col-sm-3,
+.col-md-3,
+.col-lg-3 {
+  width: 25%;
+}
+
+.col-2,
+.col-xs-2,
+.col-sm-2,
+.col-md-2,
+.col-lg-2 {
+  width: 16%;
+}
+
+.col-1,
+.col-xs-1,
+.col-sm-1,
+.col-md-1,
+.col-lg-1 {
+  width: 8%;
+}
+
+/* Setting Large Column Sizes */
+
+@media screen and (max-width: 1200px) {
+  .col-lg-12,
+  .col-lg-11,
+  .col-lg-10,
+  .col-lg-9,
+  .col-lg-8,
+  .col-lg-7,
+  .col-lg-6,
+  .col-lg-5,
+  .col-lg-4,
+  .col-lg-3,
+  .col-lg-2,
+  .col-lg-1 {
+    width: 100%;
+  }
+}
+
+/* Setting Medium Column Sizes */
+
+@media screen and (max-width: 992px) {
+  .col-md-12,
+  .col-md-11,
+  .col-md-10,
+  .col-md-9,
+  .col-md-8,
+  .col-md-7,
+  .col-md-6,
+  .col-md-5,
+  .col-md-4,
+  .col-md-3,
+  .col-md-2,
+  .col-md-1 {
+    width: 100%;
+  }
+}
+
+/* Setting Small Column Sizes */
+
+@media screen and (max-width: 768px) {
+  .col-sm-12,
+  .col-sm-11,
+  .col-sm-10,
+  .col-sm-9,
+  .col-sm-8,
+  .col-sm-7,
+  .col-sm-6,
+  .col-sm-5,
+  .col-sm-4,
+  .col-sm-3,
+  .col-sm-2,
+  .col-sm-1 {
+    width: 100%;
+  }
+}
+
+/* Setting X-Small Column Sizes */
+
+@media screen and (max-width: 576px) {
+  .col-xs-12,
+  .col-xs-11,
+  .col-xs-10,
+  .col-xs-9,
+  .col-xs-8,
+  .col-xs-7,
+  .col-xs-6,
+  .col-xs-5,
+  .col-xs-4,
+  .col-xs-3,
+  .col-xs-2,
+  .col-xs-1 {
+    width: 100%;
+  }
+}
+
+/* Setting Global Classes */
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.blur {
+  filter: blur(5px);
+}
+
+.transparent75 {
+  opacity: 75%;
+}
+
+.transparent25 {
+  opacity: 25%;
+}
+
+.button {
+  background-color: #1b6796;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  padding: 10px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.button:hover {
+  background-color: #2e8fcc;
+  color: white;
+}
+
+.group-cell {
+  border-top: 2px solid black;
+}
+
+/* Package Source Buttons */
+
+.pkg-button {
+  width: 50px;
+}
+
+.pkg-button-repo {
+  background-color: #4caf50;
+}
+
+.pkg-button-repo:hover {
+  background-color: #66bb6a;
+}
+
+.pkg-button-flatpak {
+  background-color: #2196f3;
+}
+
+.pkg-button-flatpak:hover {
+  background-color: #42a5f5;
+}
+
+.pkg-button-snap-official {
+  background-color: #9c27b0;
+}
+
+.pkg-button-snap-official:hover {
+  background-color: #ab47bc;
+}
+
+.pkg-button-snap-unofficial {
+  background-color: #ff5722;
+}
+
+.pkg-button-snap-unofficial:hover {
+  background-color: #ff5722;
+}
+
+.pkg-button- {
+  background-color: #f44336;
+}
+
+.pkg-button-:hover {
+  background-color: #ef5350;
+}

@@ -1,0 +1,12 @@
+{
+  "name": "system-configurator",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^18.0.0",
+    "sudo-prompt": "^9.2.1"
+  }
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>System Configurator</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+    <link href="./styles.css" rel="stylesheet" />
+    <script src="index.js"></script>
+  </head>
+  <body>
+    <div id="nav">
+      <div id="nav-links">
+        <a
+          id="nav-link-update-packages"
+          class="nav-link"
+          onclick="updatePackages()"
+        >
+          Update
+        </a>
+        <a
+          id="nav-link-autoremove-packages"
+          class="nav-link"
+          onclick="autoremovePackages()"
+        >
+          Autoremove
+        </a>
+        <a
+          id="nav-link-sync-packages"
+          class="nav-link"
+          onclick="syncPackages()"
+        >
+          Sync
+        </a>
+      </div>
+    </div>
+    <div id="content">
+      <div class="row">
+        <div class="col-12">
+          <h1 class="center">System Configurator</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12" id="content-div"></div>
+      </div>
+    </div>
+    <div id="command-output"></div>
+    <div id="footer">
+      <div class="footer-link" onclick="toggleConsole()">Console</div>
+    </div>
+  </body>
+</html>
