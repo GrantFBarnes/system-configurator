@@ -1,12 +1,30 @@
 {
   "name": "system-configurator",
   "version": "1.0.0",
+  "description": "Linux System Configurator",
+  "repository": "https://github.com/grantfbarnes/system-configurator",
+  "author": "Grant Barnes",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dist": "electron-builder --linux snap"
+  },
+  "build": {
+    "linux": {
+      "target": [
+        "snap"
+      ]
+    },
+    "snap": {
+      "confinement": "classic",
+      "grade": "stable"
+    }
   },
   "dependencies": {
-    "electron": "^18.0.0",
     "sudo-prompt": "^9.2.1"
+  },
+  "devDependencies": {
+    "electron": "^18.0.0",
+    "electron-builder": "^23.0.3"
   }
 }
