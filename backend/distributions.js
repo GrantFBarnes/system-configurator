@@ -14,8 +14,8 @@ class Distribution {
     return new Promise((resolve, reject) => {
       switch (this.packageManager) {
         case "apt":
-          backendCommands
-            .execute("apt list --installed | awk -F '/' '{print $1}'", false)
+          backendCommands.commands["apt-installed"]
+            .run()
             .then((output) => {
               resolve(output.split("\n"));
             })
@@ -23,8 +23,8 @@ class Distribution {
           break;
 
         case "dnf":
-          backendCommands
-            .execute("dnf list installed | awk -F '.' '{print $1}'", false)
+          backendCommands.commands["dnf-installed"]
+            .run()
             .then((output) => {
               resolve(output.split("\n"));
             })
@@ -32,8 +32,8 @@ class Distribution {
           break;
 
         case "pacman":
-          backendCommands
-            .execute("pacman -Q | awk '{print $1}'", false)
+          backendCommands.commands["pacman-installed"]
+            .run()
             .then((output) => {
               resolve(output.split("\n"));
             })
@@ -42,11 +42,8 @@ class Distribution {
           break;
 
         case "zypper":
-          backendCommands
-            .execute(
-              "zypper packages --installed-only | awk -F '|' '{print $3}'",
-              false
-            )
+          backendCommands.commands["zypper-installed"]
+            .run()
             .then((output) => {
               resolve(output.split("\n"));
             })
@@ -61,27 +58,12 @@ class Distribution {
   }
 
   async setupFlatpak() {
-    try {
-      await backendCommands.hasCommand("flatpak");
-      await backendCommands.execute(
-        "flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo",
-        false
-      );
-      if (this.name === "debian" || this.packageManager === "dnf") {
-        const adwaitaDark = "org.gtk.Gtk3theme.Adwaita-dark";
-        const hasAD = await backendCommands.execute(
-          "flatpak list --columns=application | grep '" + adwaitaDark + "'",
-          false
-        );
-
-        if (!hasAD) {
-          await backendCommands.execute(
-            "flatpak install flathub " + adwaitaDark + " -y",
-            false
-          );
-        }
-      }
-    } catch (err) {}
+    backendCommands
+      .hasCommand("flatpak")
+      .then(() => {
+        backendCommands.commands["flatpak-remote-add"].run();
+      })
+      .catch(() => {});
   }
 
   async installFlatpak() {
@@ -92,36 +74,28 @@ class Distribution {
   async installSnap() {
     await this.install(["snapd"]);
     if (this.packageManager === "dnf") {
-      await backendCommands.sudoExecute(
-        "systemctl enable --now snapd.socket",
-        false
-      );
-      await backendCommands.sudoExecute(
-        "ln -s /var/lib/snapd/snap /snap",
-        false
-      );
+      await backendCommands.commands["snap-systemd"].run();
+      await backendCommands.commands["snap-link"].run();
     }
   }
 
   async update() {
     switch (this.packageManager) {
       case "apt":
-        await backendCommands.sudoExecute(
-          "apt update && apt upgrade -Vy",
-          true
-        );
+        await backendCommands.commands["apt-update"].run();
+        await backendCommands.commands["apt-upgrade"].run();
         break;
 
       case "dnf":
-        await backendCommands.sudoExecute("dnf upgrade --refresh -y", true);
+        await backendCommands.commands["dnf-update"].run();
         break;
 
       case "pacman":
-        await backendCommands.sudoExecute("pacman -Syyu --noconfirm", true);
+        await backendCommands.commands["pacman-update"].run();
         break;
 
       case "zypper":
-        await backendCommands.sudoExecute("zypper update --no-confirm", true);
+        await backendCommands.commands["zypper-update"].run();
         break;
 
       default:
@@ -132,25 +106,19 @@ class Distribution {
   async autoremove() {
     switch (this.packageManager) {
       case "apt":
-        await backendCommands.sudoExecute("apt autoremove -y", true);
+        await backendCommands.commands["apt-autoremove"].run();
         break;
 
       case "dnf":
-        await backendCommands.sudoExecute("dnf autoremove -y", true);
+        await backendCommands.commands["dnf-autoremove"].run();
         break;
 
       case "pacman":
-        await backendCommands.sudoExecute(
-          "pacman -Qdtq | pacman -Rs - --noconfirm",
-          true
-        );
+        await backendCommands.commands["pacman-autoremove"].run();
         break;
 
       case "zypper":
-        await backendCommands.sudoExecute(
-          "zypper remove --clean-deps --no-confirm $(zypper packages --unneeded | awk -F '|' 'NR==0 || NR==1 || NR==2 || NR==3 || NR==4 {next} {print $3}')",
-          true
-        );
+        await backendCommands.commands["zypper-autoremove"].run();
         break;
 
       default:
@@ -162,37 +130,25 @@ class Distribution {
     switch (this.packageManager) {
       case "apt":
         for (let pkg in pkgs) {
-          await backendCommands.sudoExecute(
-            "apt install " + pkgs[pkg] + " -y",
-            true
-          );
+          await backendCommands.commands["apt-install"].run(pkgs[pkg]);
         }
         break;
 
       case "dnf":
         for (let pkg in pkgs) {
-          await backendCommands.sudoExecute(
-            "dnf install " + pkgs[pkg] + " -y",
-            true
-          );
+          await backendCommands.commands["dnf-install"].run(pkgs[pkg]);
         }
         break;
 
       case "pacman":
         for (let pkg in pkgs) {
-          await backendCommands.sudoExecute(
-            "pacman -S " + pkgs[pkg] + " --noconfirm --needed",
-            true
-          );
+          await backendCommands.commands["pacman-install"].run(pkgs[pkg]);
         }
         break;
 
       case "zypper":
         for (let pkg in pkgs) {
-          await backendCommands.sudoExecute(
-            "zypper install --no-confirm " + pkgs[pkg],
-            true
-          );
+          await backendCommands.commands["zypper-install"].run(pkgs[pkg]);
         }
         break;
 
@@ -205,37 +161,25 @@ class Distribution {
     switch (this.packageManager) {
       case "apt":
         for (let pkg in pkgs) {
-          await backendCommands.sudoExecute(
-            "apt remove " + pkgs[pkg] + " -y",
-            true
-          );
+          await backendCommands.commands["apt-remove"].run(pkgs[pkg]);
         }
         break;
 
       case "dnf":
         for (let pkg in pkgs) {
-          await backendCommands.sudoExecute(
-            "dnf remove " + pkgs[pkg] + " -y",
-            true
-          );
+          await backendCommands.commands["dnf-remove"].run(pkgs[pkg]);
         }
         break;
 
       case "pacman":
         for (let pkg in pkgs) {
-          await backendCommands.sudoExecute(
-            "pacman -Rsun " + pkgs[pkg] + " --noconfirm",
-            true
-          );
+          await backendCommands.commands["pacman-remove"].run(pkgs[pkg]);
         }
         break;
 
       case "zypper":
         for (let pkg in pkgs) {
-          await backendCommands.sudoExecute(
-            "zypper remove --clean-deps --no-confirm " + pkgs[pkg],
-            true
-          );
+          await backendCommands.commands["zypper-remove"].run(pkgs[pkg]);
         }
         break;
 
@@ -250,8 +194,8 @@ class Distribution {
 
 function getDistribution() {
   return new Promise((resolve, reject) => {
-    backendCommands
-      .execute("head -n 1 /etc/os-release", false)
+    backendCommands.commands["get-distro"]
+      .run()
       .then((output) => {
         let distro = "";
         if (output.indexOf("Alma") >= 0) {
@@ -351,7 +295,8 @@ function getDistribution() {
         }
 
         resolve(new Distribution(distro, repository, packageManager));
-      });
+      })
+      .catch(() => {});
   });
 }
 

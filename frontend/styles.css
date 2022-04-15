@@ -5,7 +5,7 @@ html {
 }
 
 table {
-  width: 80%;
+  width: fit-content;
 }
 
 th,
@@ -45,9 +45,9 @@ td {
   text-decoration: none;
 }
 
-/* Setting Content Properties */
+/* Setting Main Properties */
 
-#content {
+#main {
   height: 100%;
   padding-top: 50px;
   padding-bottom: 250px;
@@ -55,7 +55,7 @@ td {
 
 /* Setting Command Output Properties */
 
-#command-output {
+#bottom-display {
   display: none;
   height: 200px;
   overflow-y: auto;
@@ -304,6 +304,7 @@ td {
 .button:hover {
   background-color: #2e8fcc;
   color: white;
+  cursor: pointer;
 }
 
 .group-cell {

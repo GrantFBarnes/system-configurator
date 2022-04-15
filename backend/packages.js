@@ -797,10 +797,10 @@ packages["codium"] = new Package(
   "Editors", // Group
   [], // Repo
   "com.vscodium.codium", // Flatpak
-  "", // Snap
+  "codium", // Snap
   { pacman: ["code"] }, // Repo Other
   false, // Snap Official
-  false, // Snap Classic
+  true, // Snap Classic
   "" // DE
 );
 packages["gedit"] = new Package(

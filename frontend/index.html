@@ -36,17 +36,35 @@
         </a>
       </div>
     </div>
-    <div id="content">
+    <div id="main">
       <div class="row">
         <div class="col-12">
           <h1 class="center">System Configurator</h1>
         </div>
       </div>
       <div class="row">
-        <div class="col-12" id="content-div"></div>
+        <div id="content" class="col-12 center">
+          <label for="password-input">Password:</label>
+          <input
+            type="password"
+            id="password-input"
+            name="password-input"
+            onkeyup="passwordChange()"
+          />
+          <br />
+          <br />
+          <button
+            id="password-button"
+            class="button"
+            style="display: none"
+            onclick="checkPassword()"
+          >
+            Check Password
+          </button>
+        </div>
       </div>
     </div>
-    <div id="command-output"></div>
+    <div id="bottom-display"></div>
     <div id="footer">
       <div class="footer-link" onclick="toggleConsole()">Console</div>
     </div>

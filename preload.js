@@ -19,50 +19,115 @@ var selectedInstalls = {};
 ////////////////////////////////////////////////////////////////////////////////
 // Package Functions
 
-async function installPackage(pkg, method) {
-  const package = packages[pkg];
-  if (method === "repo") {
-    await distribution.install(package.getRepo(distribution));
-  } else if (method === "flatpak") {
-    try {
-      await backendCommands.hasCommand("flatpak");
-      await distribution.installFlatpak();
-      await backendCommands.execute(
-        "flatpak install flathub " + package.flatpak + " -y",
-        true
-      );
-    } catch (err) {}
-  } else if (method === "snap") {
-    try {
-      await backendCommands.hasCommand("snap");
-      await distribution.installSnap();
-      await backendCommands.sudoExecute(
-        "snap install " +
-          package.snap +
-          (package.snap_classic ? " --classic" : ""),
-        true
-      );
-    } catch (err) {}
-  }
+function installPackage(pkg, method) {
+  return new Promise((resolve, reject) => {
+    const package = packages[pkg];
+    if (method === "repo") {
+      distribution
+        .install(package.getRepo(distribution))
+        .then(() => {
+          resolve();
+        })
+        .catch(() => {
+          reject();
+        });
+    } else if (method === "flatpak") {
+      backendCommands
+        .hasCommand("flatpak")
+        .then(() => {
+          backendCommands.commands["flatpak-install"]
+            .run(package.flatpak)
+            .then(() => {
+              resolve();
+            })
+            .catch(() => {
+              reject();
+            });
+        })
+        .catch(() => {
+          distribution
+            .installFlatpak()
+            .then(() => {
+              backendCommands.commands["flatpak-install"]
+                .run(package.flatpak)
+                .then(() => {
+                  resolve();
+                })
+                .catch(() => {
+                  reject();
+                });
+            })
+            .catch(() => {});
+        });
+    } else if (method === "snap") {
+      backendCommands
+        .hasCommand("snap")
+        .then(() => {
+          backendCommands.commands["snap-install"]
+            .run(package.snap, package.snap_classic ? " --classic" : "")
+            .then(() => {
+              resolve();
+            })
+            .catch(() => {
+              reject();
+            });
+        })
+        .catch(() => {
+          distribution
+            .installSnap()
+            .then(() => {
+              backendCommands.commands["snap-install"]
+                .run(package.snap, package.snap_classic ? " --classic" : "")
+                .then(() => {
+                  resolve();
+                })
+                .catch(() => {
+                  reject();
+                });
+            })
+            .catch(() => {});
+        });
+    }
+  });
 }
 
-async function uninstallPackage(pkg, method) {
-  const package = packages[pkg];
-  if (method === "repo") {
-    await distribution.uninstall(package.getRepo(distribution));
-  } else if (method === "flatpak") {
-    await backendCommands.execute(
-      "flatpak remove " + package.flatpak + " -y",
-      true
-    );
-  } else if (method === "snap") {
-    await backendCommands.sudoExecute("snap remove " + package.snap, true);
-  }
+function uninstallPackage(pkg, method) {
+  return new Promise((resolve, reject) => {
+    const package = packages[pkg];
+    if (method === "repo") {
+      distribution
+        .uninstall(package.getRepo(distribution))
+        .then(() => {
+          resolve();
+        })
+        .catch(() => {
+          reject();
+        });
+    } else if (method === "flatpak") {
+      backendCommands.commands["flatpak-remove"]
+        .run(package.flatpak)
+        .then(() => {
+          resolve();
+        })
+        .catch(() => {
+          reject();
+        });
+    } else if (method === "snap") {
+      backendCommands.commands["snap-remove"]
+        .run(package.snap)
+        .then(() => {
+          resolve();
+        })
+        .catch(() => {
+          reject();
+        });
+    }
+  });
 }
 
 async function syncPackages() {
-  const contentDiv = document.getElementById("content-div");
-  if (contentDiv) contentDiv.className = "blur";
+  const mainDiv = document.getElementById("main");
+  if (mainDiv) mainDiv.className = "blur";
   for (let pkg in selectedInstalls) {
     if (selectedInstalls[pkg] !== currentInstalled[pkg]) {
       if (currentInstalled[pkg]) {
@@ -74,32 +139,44 @@ async function syncPackages() {
       currentInstalled[pkg] = selectedInstalls[pkg];
     }
   }
-  if (contentDiv) contentDiv.className = "";
+  if (mainDiv) mainDiv.className = "";
   generateHTML();
 }
 
 async function updatePackages() {
-  const contentDiv = document.getElementById("content-div");
-  if (contentDiv) contentDiv.className = "blur";
+  const mainDiv = document.getElementById("main");
+  if (mainDiv) mainDiv.className = "blur";
   try {
     await distribution.update();
-    await backendCommands.hasCommand("flatpak");
-    await backendCommands.execute("flatpak update -y", true);
-    await backendCommands.hasCommand("snap");
-    await backendCommands.sudoExecute("snap refresh", true);
   } catch (err) {}
-  if (contentDiv) contentDiv.className = "";
+  backendCommands
+    .hasCommand("flatpak")
+    .then(() => {
+      backendCommands.commands["flatpak-update"].run();
+    })
+    .catch(() => {});
+  backendCommands
+    .hasCommand("snap")
+    .then(() => {
+      backendCommands.commands["snap-update"].run();
+    })
+    .catch(() => {});
+  if (mainDiv) mainDiv.className = "";
 }
 
 async function autoremovePackages() {
-  const contentDiv = document.getElementById("content-div");
-  if (contentDiv) contentDiv.className = "blur";
+  const mainDiv = document.getElementById("main");
+  if (mainDiv) mainDiv.className = "blur";
   try {
     await distribution.autoremove();
-    await backendCommands.hasCommand("flatpak");
-    await backendCommands.execute("flatpak remove --unused -y", true);
   } catch (err) {}
-  if (contentDiv) contentDiv.className = "";
+  backendCommands
+    .hasCommand("flatpak")
+    .then(() => {
+      backendCommands.commands["flatpak-autoremove"].run();
+    })
+    .catch(() => {});
+  if (mainDiv) mainDiv.className = "";
 }
 
 function selectPackage(pkg, method) {
@@ -153,7 +230,9 @@ function getPackageButtonInnerHTML(pkg, method) {
 }
 
 function generateHTML() {
-  const contentDiv = document.getElementById("content-div");
+  const mainDiv = document.getElementById("main");
+  if (mainDiv) mainDiv.className = "blur";
+  const contentDiv = document.getElementById("content");
   contentDiv.innerHTML = "";
   const table = document.createElement("table");
   table.className = "center";
@@ -225,89 +304,113 @@ function generateHTML() {
     }
   }
   contentDiv.appendChild(table);
+  if (mainDiv) mainDiv.className = "";
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Get Installed Functions
 
 function getInstalledFlatpaks() {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     backendCommands
       .hasCommand("flatpak")
       .then(() => {
-        backendCommands
-          .execute("flatpak list --app | awk -F '\t' '{print $2}'", false)
+        backendCommands.commands["flatpak-installed"]
+          .run()
           .then((list) => {
             resolve(list.split("\n"));
           })
-          .catch(() => reject());
+          .catch(() => resolve([]));
       })
-      .catch(() => reject());
+      .catch(() => resolve([]));
   });
 }
 
 function getInstalledSnaps() {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     backendCommands
       .hasCommand("snap")
       .then(() => {
-        backendCommands
-          .execute("snap list | awk '{print $1}'", false)
+        backendCommands.commands["snap-installed"]
+          .run()
           .then((list) => {
             resolve(list.split("\n"));
           })
-          .catch(() => reject());
+          .catch(() => resolve([]));
       })
-      .catch(() => reject());
+      .catch(() => resolve([]));
   });
 }
 
 function getInstalledPackages() {
-  distribution.getInstalledRepo().then((installedRepo) => {
-    getInstalledFlatpaks().then((installedFlatpaks) => {
-      getInstalledSnaps().then((installedSnaps) => {
-        for (let pkg in packages) {
-          currentInstalled[pkg] = "";
-          selectedInstalls[pkg] = "";
-          const package = packages[pkg];
+  distribution
+    .getInstalledRepo()
+    .then((installedRepo) => {
+      getInstalledFlatpaks()
+        .then((installedFlatpaks) => {
+          getInstalledSnaps()
+            .then((installedSnaps) => {
+              for (let pkg in packages) {
+                currentInstalled[pkg] = "";
+                selectedInstalls[pkg] = "";
+                const package = packages[pkg];
 
-          const packageRepo = package.getRepo(distribution);
-          if (packageRepo) {
-            for (let r in packageRepo) {
-              if (installedRepo.indexOf(packageRepo[r]) >= 0) {
-                currentInstalled[pkg] = "repo";
-                selectedInstalls[pkg] = "repo";
-                break;
+                const packageRepo = package.getRepo(distribution);
+                if (packageRepo) {
+                  for (let r in packageRepo) {
+                    if (installedRepo.indexOf(packageRepo[r]) >= 0) {
+                      currentInstalled[pkg] = "repo";
+                      selectedInstalls[pkg] = "repo";
+                      break;
+                    }
+                  }
+                }
+                if (package.flatpak) {
+                  if (installedFlatpaks.indexOf(package.flatpak) >= 0) {
+                    currentInstalled[pkg] = "flatpak";
+                    selectedInstalls[pkg] = "flatpak";
+                  }
+                }
+                if (package.snap) {
+                  if (installedSnaps.indexOf(package.snap) >= 0) {
+                    currentInstalled[pkg] = "snap";
+                    selectedInstalls[pkg] = "snap";
+                  }
+                }
               }
-            }
-          }
-          if (package.flatpak) {
-            if (installedFlatpaks.indexOf(package.flatpak) >= 0) {
-              currentInstalled[pkg] = "flatpak";
-              selectedInstalls[pkg] = "flatpak";
-            }
-          }
-          if (package.snap) {
-            if (installedSnaps.indexOf(package.snap) >= 0) {
-              currentInstalled[pkg] = "snap";
-              selectedInstalls[pkg] = "snap";
-            }
-          }
-        }
-        generateHTML();
-      });
-    });
-  });
+              generateHTML();
+            })
+            .catch(() => {});
+        })
+        .catch(() => {});
+    })
+    .catch(() => {});
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Init
 
-window.addEventListener("DOMContentLoaded", () => {
-  backendDistributions.getDistribution().then((distro) => {
-    distribution = distro;
-    getInstalledPackages();
-  });
-});
+function checkPassword() {
+  const mainDiv = document.getElementById("main");
+  if (mainDiv) mainDiv.className = "blur";
+  const passwordInput = document.getElementById("password-input");
+  if (!passwordInput) return;
+  backendCommands
+    .checkPassword(passwordInput.value)
+    .then(() => {
+      backendDistributions
+        .getDistribution()
+        .then((distro) => {
+          distribution = distro;
+          getInstalledPackages();
+        })
+        .catch(() => {});
+    })
+    .catch(() => {
+      passwordInput.style.background = "red";
+      alert("Password is not valid!");
+      if (mainDiv) mainDiv.className = "";
+    });
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Context Bridge
@@ -317,4 +420,5 @@ contextBridge.exposeInMainWorld("electron", {
   updatePackages: () => updatePackages(),
   autoremovePackages: () => autoremovePackages(),
   syncPackages: () => syncPackages(),
+  checkPassword: () => checkPassword(),
 });
