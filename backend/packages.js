@@ -1,29 +1,22 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Define Class
+// Define Classes
 
 class Package {
-  constructor(
-    name,
-    desc,
-    group,
-    repo,
-    flatpak,
-    snap,
-    repo_other,
-    snap_official,
-    snap_classic,
-    de
-  ) {
+  constructor(name, description, group, repo, flatpak, snap, de) {
     this.name = name;
-    this.desc = desc;
+    this.description = description;
     this.group = group;
     this.repo = repo;
     this.flatpak = flatpak;
     this.snap = snap;
-    this.repo_other = repo_other;
-    this.snap_official = snap_official;
-    this.snap_classic = snap_classic;
     this.de = de;
+  }
+}
+
+class Repo {
+  constructor(repo, repo_other) {
+    this.repo = repo;
+    this.repo_other = repo_other;
   }
 
   getRepo(distro) {
@@ -43,408 +36,287 @@ class Package {
   }
 }
 
+class Flatpak {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
+class Snap {
+  constructor(name, official, classic) {
+    this.name = name;
+    this.official = official ? true : false;
+    this.classic = classic ? true : false;
+  }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Define Packages
 
 var packages = {};
 
 // Applications Group
+packages["bitwarden"] = new Package(
+  "Bitwarden", // Name
+  "Password Manager", // Description
+  "Applications", // Group
+  null, // Repo
+  null, // Flatpak
+  new Snap("bitwarden", true, false), // Snap
+  "" // DE
+);
 packages["cheese"] = new Package(
   "Cheese", // Name
   "Webcam", // Description
   "Applications", // Group
-  ["cheese"], // Repo
-  "org.gnome.Cheese", // Flatpak
-  "", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
-  "" // DE
+  new Repo(["cheese"], {}), // Repo
+  new Flatpak("org.gnome.Cheese"), // Flatpak
+  null, // Snap
+  "gnome" // DE
 );
 packages["deja-dup"] = new Package(
   "Deja-Dup", // Name
   "Backup", // Description
   "Applications", // Group
-  ["deja-dup"], // Repo
-  "org.gnome.DejaDup", // Flatpak
-  "deja-dup", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  true, // Snap Classic
-  "" // DE
-);
-packages["calibre"] = new Package(
-  "Calibre", // Name
-  "E Book Reader/Editor", // Description
-  "Applications", // Group
-  ["calibre"], // Repo
-  "", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
-  "" // DE
+  new Repo(["deja-dup"], { redhat: [] }), // Repo
+  new Flatpak("org.gnome.DejaDup"), // Flatpak
+  null, // Snap
+  "gnome" // DE
 );
 packages["eog"] = new Package(
   "Eye of Gnome", // Name
-  "Gnome Image Viewer", // Description
+  "Image Viewer", // Description
   "Applications", // Group
-  ["eog"], // Repo
-  "org.gnome.eog", // Flatpak
-  "eog", // Snap
-  {}, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["eog"], {}), // Repo
+  new Flatpak("org.gnome.eog"), // Flatpak
+  new Snap("eog", true, false), // Snap
   "gnome" // DE
 );
 packages["evince"] = new Package(
   "Evince", // Name
-  "Gnome Document Viewer", // Description
+  "Document Viewer", // Description
   "Applications", // Group
-  ["evince"], // Repo
-  "org.gnome.Evince", // Flatpak
-  "evince", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["evince"], {}), // Repo
+  new Flatpak("org.gnome.Evince"), // Flatpak
+  null, // Snap
   "gnome" // DE
-);
-packages["foliate"] = new Package(
-  "Foliate", // Name
-  "E Book Reader", // Description
-  "Applications", // Group
-  [], // Repo
-  "com.github.johnfactotum.Foliate", // Flatpak
-  "foliate", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
-  "" // DE
 );
 packages["fedora-media-writer"] = new Package(
   "Fedora Media Writer", // Name
   "ISO Writer", // Description
   "Applications", // Group
-  [], // Repo
-  "org.fedoraproject.MediaWriter", // Flatpak
-  "", // Snap
-  { fedora: ["mediawriter"] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo([], { fedora: ["mediawriter"] }), // Repo
+  new Flatpak("org.fedoraproject.MediaWriter"), // Flatpak
+  null, // Snap
   "" // DE
 );
 packages["gnome-books"] = new Package(
   "Gnome Books", // Name
-  "", // Description
+  "eBook Reader", // Description
   "Applications", // Group
-  ["gnome-books"], // Repo
-  "org.gnome.Books", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-books"], { redhat: [] }), // Repo
+  new Flatpak("org.gnome.Books"), // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["gnome-boxes"] = new Package(
   "Gnome Boxes", // Name
   "Virtual Machine Manager", // Description
   "Applications", // Group
-  ["gnome-boxes"], // Repo
-  "org.gnome.Boxes", // Flatpak
-  "", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-boxes"], {}), // Repo
+  new Flatpak("org.gnome.Boxes"), // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["gnome-calculator"] = new Package(
   "Gnome Calculator", // Name
-  "", // Description
+  "Calculator", // Description
   "Applications", // Group
-  ["gnome-calculator"], // Repo
-  "org.gnome.Calculator", // Flatpak
-  "gnome-calculator", // Snap
-  {}, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-calculator"], {}), // Repo
+  new Flatpak("org.gnome.Calculator"), // Flatpak
+  new Snap("gnome-calculator", true, false), // Snap
   "gnome" // DE
 );
 packages["gnome-calendar"] = new Package(
   "Gnome Calendar", // Name
-  "", // Description
+  "Calendar", // Description
   "Applications", // Group
-  ["gnome-calendar"], // Repo
-  "org.gnome.Calendar", // Flatpak
-  "gnome-calendar", // Snap
-  { redhat: [] }, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-calendar"], { redhat: [] }), // Repo
+  new Flatpak("org.gnome.Calendar"), // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["gnome-clocks"] = new Package(
   "Gnome Clocks", // Name
-  "", // Description
+  "World Clocks", // Description
   "Applications", // Group
-  ["gnome-clocks"], // Repo
-  "org.gnome.clocks", // Flatpak
-  "gnome-clocks", // Snap
-  { redhat: [] }, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-clocks"], { redhat: [] }), // Repo
+  new Flatpak("org.gnome.clocks"), // Flatpak
+  new Snap("gnome-clocks", true, false), // Snap
   "gnome" // DE
 );
 packages["gnome-connections"] = new Package(
   "Gnome Connections", // Name
   "Network Connection Manager", // Description
   "Applications", // Group
-  ["gnome-connections"], // Repo
-  "org.gnome.Connections", // Flatpak
-  "", // Snap
-  { debian: [], redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
-  "gnome" // DE
-);
-packages["gnome-dialect"] = new Package(
-  "Gnome Dialect", // Name
-  "", // Description
-  "Applications", // Group
-  [], // Repo
-  "com.github.gi_lom.dialect", // Flatpak
-  "", // Snap
-  { fedora: ["dialect"] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-connections"], { debian: [], redhat: [] }), // Repo
+  new Flatpak("org.gnome.Connections"), // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["gnome-maps"] = new Package(
   "Gnome Maps", // Name
-  "", // Description
+  "Maps", // Description
   "Applications", // Group
-  ["gnome-maps"], // Repo
-  "org.gnome.Maps", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-maps"], { redhat: [] }), // Repo
+  new Flatpak("org.gnome.Maps"), // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["gnome-passwordsafe"] = new Package(
   "Gnome Password Safe", // Name
-  "", // Description
+  "Password Manager", // Description
   "Applications", // Group
-  ["gnome-passwordsafe"], // Repo
-  "org.gnome.PasswordSafe", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-passwordsafe"], { redhat: [] }), // Repo
+  new Flatpak("org.gnome.PasswordSafe"), // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["gnome-weather"] = new Package(
   "Gnome Weather", // Name
-  "", // Description
+  "Weather", // Description
   "Applications", // Group
-  ["gnome-weather"], // Repo
-  "org.gnome.Weather", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-weather"], { redhat: [] }), // Repo
+  new Flatpak("org.gnome.Weather"), // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["gnucash"] = new Package(
   "GNU Cash", // Name
   "Accounting Application", // Description
   "Applications", // Group
-  ["gnucash"], // Repo
-  "org.gnucash.GnuCash", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
-  "" // DE
-);
-packages["gramps"] = new Package(
-  "GRAMPS", // Name
-  "Genealogical Research and Analysis Management Programming System", // Description
-  "Applications", // Group
-  ["gramps"], // Repo
-  "org.gramps_project.Gramps", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnucash"], { redhat: [] }), // Repo
+  new Flatpak("org.gnucash.GnuCash"), // Flatpak
+  null, // Snap
   "" // DE
 );
 packages["gwenview"] = new Package(
   "Gwenview", // Name
   "KDE Image Viewer", // Description
   "Applications", // Group
-  ["gwenview"], // Repo
-  "org.kde.gwenview", // Flatpak
-  "gwenview", // Snap
-  { redhat: [] }, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
-  "kde" // DE
-);
-packages["kalendar"] = new Package(
-  "Kalendar", // Name
-  "KDE Calendar", // Description
-  "Applications", // Group
-  ["kalendar"], // Repo
-  "", // Flatpak
-  "", // Snap
-  { pacman: [], redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gwenview"], { redhat: [] }), // Repo
+  new Flatpak("org.kde.gwenview"), // Flatpak
+  new Snap("gwenview", true, false), // Snap
   "kde" // DE
 );
 packages["kcalc"] = new Package(
   "KCalc", // Name
-  "KDE Calculator", // Description
+  "Calculator", // Description
   "Applications", // Group
-  ["kcalc"], // Repo
-  "org.kde.kcalc", // Flatpak
-  "kcalc", // Snap
-  { redhat: [] }, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["kcalc"], { redhat: [] }), // Repo
+  new Flatpak("org.kde.kcalc"), // Flatpak
+  new Snap("kcalc", true, false), // Snap
   "kde" // DE
 );
 packages["okular"] = new Package(
   "Okular", // Name
   "KDE Document Viewer", // Description
   "Applications", // Group
-  ["okular"], // Repo
-  "org.kde.okular", // Flatpak
-  "okular", // Snap
-  { redhat: [] }, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["okular"], { redhat: [] }), // Repo
+  new Flatpak("org.kde.okular"), // Flatpak
+  new Snap("okular", true, false), // Snap
   "kde" // DE
 );
 packages["transmission-gtk"] = new Package(
   "Transmission (GTK)", // Name
   "Torrent", // Description
   "Applications", // Group
-  ["transmission-gtk"], // Repo
-  "", // Flatpak
-  "", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["transmission-gtk"], {}), // Repo
+  null, // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["transmission-qt"] = new Package(
   "Transmission (QT)", // Name
   "Torrent", // Description
   "Applications", // Group
-  ["transmission-qt"], // Repo
-  "", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["transmission-qt"], { redhat: [] }), // Repo
+  null, // Flatpak
+  null, // Snap
   "kde" // DE
 );
 packages["virt-manager"] = new Package(
   "Virt Manager", // Name
   "Virtual Machine Manager", // Description
   "Applications", // Group
-  ["virt-manager"], // Repo
-  "", // Flatpak
-  "", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
-  "" // DE
-);
-packages["virtualbox"] = new Package(
-  "Virtual Box", // Name
-  "Virtual Machine Manager", // Description
-  "Applications", // Group
-  ["virtualbox"], // Repo
-  "", // Flatpak
-  "", // Snap
-  { dnf: ["VirtualBox"], debian: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["virt-manager"], {}), // Repo
+  null, // Flatpak
+  null, // Snap
   "" // DE
 );
 
 // Browsers Group
+packages["brave"] = new Package(
+  "Brave", // Name
+  "Privary Browser", // Description
+  "Browsers", // Group
+  null, // Repo
+  new Flatpak("com.brave.Browser"), // Flatpak
+  new Snap("brave", false, false), // Snap
+  "" // DE
+);
 packages["chromium"] = new Package(
   "Chromium", // Name
-  "", // Description
+  "Google Base Browser", // Description
   "Browsers", // Group
-  ["chromium"], // Repo
-  "org.chromium.Chromium", // Flatpak
-  "chromium", // Snap
-  { ubuntu: [], redhat: [] }, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["chromium"], { ubuntu: [], redhat: [] }), // Repo
+  new Flatpak("org.chromium.Chromium"), // Flatpak
+  new Snap("chromium", true, false), // Snap
   "" // DE
 );
 packages["epiphany"] = new Package(
   "Epiphany", // Name
-  "Gnome", // Description
+  "Gnome Browser", // Description
   "Browsers", // Group
-  ["epiphany"], // Repo
-  "org.gnome.Epiphany", // Flatpak
-  "", // Snap
-  { redhat: [], apt: ["epiphany-browser"] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["epiphany"], { redhat: [], apt: ["epiphany-browser"] }), // Repo
+  new Flatpak("org.gnome.Epiphany"), // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["icecat"] = new Package(
   "Icecat", // Name
-  "GNU", // Description
+  "GNU Browser", // Description
   "Browsers", // Group
-  [], // Repo
-  "", // Flatpak
-  "", // Snap
-  { fedora: ["icecat"] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo([], { fedora: ["icecat"] }), // Repo
+  null, // Flatpak
+  null, // Snap
   "" // DE
 );
 packages["firefox"] = new Package(
   "Firefox", // Name
-  "", // Description
+  "Mozilla Browser", // Description
   "Browsers", // Group
-  ["firefox"], // Repo
-  "org.mozilla.firefox", // Flatpak
-  "firefox", // Snap
-  { redhat: [], debian: [] }, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["firefox"], { redhat: [], apt: [] }), // Repo
+  new Flatpak("org.mozilla.firefox"), // Flatpak
+  new Snap("firefox", true, false), // Snap
   "" // DE
 );
 packages["firefox-esr"] = new Package(
   "Firefox ESR", // Name
-  "Extended Support Release", // Description
+  "Mozilla Extended Support Release", // Description
   "Browsers", // Group
-  [], // Repo
-  "", // Flatpak
-  "", // Snap
-  { redhat: ["firefox"], debian: ["firefox-esr"] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo([], { redhat: ["firefox"], debian: ["firefox-esr"] }), // Repo
+  null, // Flatpak
+  null, // Snap
   "" // DE
 );
 packages["torbrowser"] = new Package(
   "TOR", // Name
   "The Onion Router", // Description
   "Browsers", // Group
-  ["torbrowser-launcher"], // Repo
-  "com.github.micahflee.torbrowser-launcher", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["torbrowser-launcher"], { redhat: [] }), // Repo
+  new Flatpak("com.github.micahflee.torbrowser-launcher"), // Flatpak
+  null, // Snap
   "" // DE
 );
 
@@ -453,36 +325,18 @@ packages["discord"] = new Package(
   "Discord", // Name
   "Gaming Chat", // Description
   "Communication", // Group
-  [], // Repo
-  "com.discordapp.Discord", // Flatpak
-  "discord", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
-  "" // DE
-);
-packages["geary"] = new Package(
-  "Geary", // Name
-  "Gnome Email", // Description
-  "Communication", // Group
-  ["geary"], // Repo
-  "", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  null, // Repo
+  new Flatpak("com.discordapp.Discord"), // Flatpak
+  new Snap("discord", false, false), // Snap
   "" // DE
 );
 packages["thunderbird"] = new Package(
   "Thunderbird", // Name
   "Email", // Description
   "Communication", // Group
-  ["thunderbird"], // Repo
-  "", // Flatpak
-  "thunderbird", // Snap
-  {}, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["thunderbird"], {}), // Repo
+  new Flatpak("org.mozilla.Thunderbird"), // Flatpak
+  new Snap("thunderbird", true, false), // Snap
   "" // DE
 );
 
@@ -491,290 +345,227 @@ packages["0ad"] = new Package(
   "0 A.D.", // Name
   "Ancient Warfare", // Description
   "Games", // Group
-  ["0ad"], // Repo
-  "com.play0ad.zeroad", // Flatpak
-  "0ad", // Snap
-  { redhat: [] }, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["0ad"], { redhat: [] }), // Repo
+  new Flatpak("com.play0ad.zeroad"), // Flatpak
+  new Snap("0ad", true, false), // Snap
   "" // DE
 );
 packages["aisleriot"] = new Package(
   "Aisleriot", // Name
   "Solitare", // Description
   "Games", // Group
-  ["aisleriot"], // Repo
-  "org.gnome.Aisleriot", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["aisleriot"], { redhat: [] }), // Repo
+  new Flatpak("org.gnome.Aisleriot"), // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["gnome-2048"] = new Package(
   "Gnome 2048", // Name
-  "", // Description
+  "2048", // Description
   "Games", // Group
-  ["gnome-2048"], // Repo
-  "org.gnome.TwentyFortyEight", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-2048"], { redhat: [] }), // Repo
+  new Flatpak("org.gnome.TwentyFortyEight"), // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["gnome-chess"] = new Package(
   "Gnome Chess", // Name
-  "", // Description
+  "Chess", // Description
   "Games", // Group
-  ["gnome-chess"], // Repo
-  "org.gnome.Chess", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-chess"], { redhat: [] }), // Repo
+  new Flatpak("org.gnome.Chess"), // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["gnome-mines"] = new Package(
   "Gnome Mines", // Name
-  "", // Description
+  "Mines", // Description
   "Games", // Group
-  ["gnome-mines"], // Repo
-  "org.gnome.Mines", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-mines"], { redhat: [] }), // Repo
+  new Flatpak("org.gnome.Mines"), // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["gnome-sudoku"] = new Package(
   "Gnome Sudoku", // Name
-  "", // Description
+  "Sudoku", // Description
   "Games", // Group
-  ["gnome-sudoku"], // Repo
-  "org.gnome.Sudoku", // Flatpak
-  "gnome-sudoku", // Snap
-  { redhat: [] }, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-sudoku"], { redhat: [] }), // Repo
+  new Flatpak("org.gnome.Sudoku"), // Flatpak
+  new Snap("gnome-sudoku", true, false), // Snap
   "gnome" // DE
 );
 packages["kmines"] = new Package(
   "KMines", // Name
-  "", // Description
+  "Mines", // Description
   "Games", // Group
-  ["kmines"], // Repo
-  "", // Flatpak
-  "kmines", // Snap
-  { redhat: [] }, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["kmines"], { redhat: [] }), // Repo
+  null, // Flatpak
+  new Snap("kmines", true, false), // Snap
   "kde" // DE
 );
 packages["knights"] = new Package(
   "KNights", // Name
-  "", // Description
+  "Chess", // Description
   "Games", // Group
-  ["knights"], // Repo
-  "", // Flatpak
-  "knights", // Snap
-  { redhat: [] }, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["knights"], { redhat: [] }), // Repo
+  null, // Flatpak
+  new Snap("knights", true, false), // Snap
   "kde" // DE
 );
 packages["ksudoku"] = new Package(
   "KSudoku", // Name
-  "", // Description
+  "Sudoku", // Description
   "Games", // Group
-  ["ksudoku"], // Repo
-  "org.kde.ksudoku", // Flatpak
-  "ksudoku", // Snap
-  { redhat: [] }, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["ksudoku"], { redhat: [] }), // Repo
+  new Flatpak("org.kde.ksudoku"), // Flatpak
+  new Snap("ksudoku", true, false), // Snap
   "kde" // DE
 );
 packages["quadrapassel"] = new Package(
   "Quadrapassel", // Name
-  "Gnome Tetris", // Description
+  "Tetris", // Description
   "Games", // Group
-  ["quadrapassel"], // Repo
-  "org.gnome.Quadrapassel", // Flatpak
-  "quadrapassel", // Snap
-  { redhat: [] }, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["quadrapassel"], { redhat: [] }), // Repo
+  new Flatpak("org.gnome.Quadrapassel"), // Flatpak
+  new Snap("quadrapassel", true, false), // Snap
   "gnome" // DE
 );
 packages["steam"] = new Package(
   "Steam", // Name
-  "", // Description
+  "Steam Client", // Description
   "Games", // Group
-  [], // Repo
-  "com.valvesoftware.Steam", // Flatpak
-  "", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  null, // Repo
+  new Flatpak("com.valvesoftware.Steam"), // Flatpak
+  null, // Snap
   "" // DE
 );
 packages["supertuxkart"] = new Package(
   "Super Tux Kart", // Name
-  "", // Description
+  "Racing Game", // Description
   "Games", // Group
-  ["supertuxkart"], // Repo
-  "net.supertuxkart.SuperTuxKart", // Flatpak
-  "supertuxkart", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["supertuxkart"], { redhat: [] }), // Repo
+  new Flatpak("net.supertuxkart.SuperTuxKart"), // Flatpak
+  new Snap("supertuxkart", false, false), // Snap
   "" // DE
 );
 packages["xonotic"] = new Package(
   "Xonotic", // Name
   "FPS", // Description
   "Games", // Group
-  [], // Repo
-  "org.xonotic.Xonotic", // Flatpak
-  "xonotic", // Snap
-  { fedora: ["xonotic"] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo([], { fedora: ["xonotic"] }), // Repo
+  new Flatpak("org.xonotic.Xonotic"), // Flatpak
+  new Snap("xonotic", false, false), // Snap
   "" // DE
 );
 
 // Multi Media Group
 packages["blender"] = new Package(
   "Blender", // Name
-  "3D Modleler and Video Editor", // Description
+  "3D Modeler/Video Editor", // Description
   "Multi Media", // Group
-  ["blender"], // Repo
-  "org.blender.Blender", // Flatpak
-  "blender", // Snap
-  { redhat: [] }, // Repo Other
-  true, // Snap Official
-  true, // Snap Classic
+  new Repo(["blender"], { redhat: [] }), // Repo
+  new Flatpak("org.blender.Blender"), // Flatpak
+  new Snap("blender", true, true), // Snap
   "" // DE
 );
 packages["elisa"] = new Package(
   "Elisa", // Name
-  "KDE Music Player", // Description
+  "Music Player", // Description
   "Multi Media", // Group
-  ["elisa"], // Repo
-  "org.kde.elisa", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["elisa"], { redhat: [] }), // Repo
+  new Flatpak("org.kde.elisa"), // Flatpak
+  null, // Snap
   "kde" // DE
 );
 packages["gimp"] = new Package(
   "GIMP", // Name
   "GNU Image Manipulation Program", // Description
   "Multi Media", // Group
-  ["gimp"], // Repo
-  "org.gimp.GIMP", // Flatpak
-  "gimp", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gimp"], {}), // Repo
+  new Flatpak("org.gimp.GIMP"), // Flatpak
+  new Snap("gimp", false, false), // Snap
   "" // DE
 );
 packages["gnome-music"] = new Package(
   "Gnome Music", // Name
-  "", // Description
+  "Music Player", // Description
   "Multi Media", // Group
-  ["gnome-music"], // Repo
-  "org.gnome.Music", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-music"], { redhat: [] }), // Repo
+  new Flatpak("org.gnome.Music"), // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["gnome-photos"] = new Package(
   "Gnome Photos", // Name
-  "", // Description
+  "Photo Viewer", // Description
   "Multi Media", // Group
-  ["gnome-photos"], // Repo
-  "org.gnome.Photos", // Flatpak
-  "", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-photos"], {}), // Repo
+  new Flatpak("org.gnome.Photos"), // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["gnome-sound-recorder"] = new Package(
   "Gnome Sound Recorder", // Name
-  "", // Description
+  "Sound Recorder", // Description
   "Multi Media", // Group
-  ["gnome-sound-recorder"], // Repo
-  "org.gnome.SoundRecorder", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-sound-recorder"], { redhat: [] }), // Repo
+  new Flatpak("org.gnome.SoundRecorder"), // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["kdenlive"] = new Package(
   "KdenLive", // Name
   "KDE Video Editor", // Description
   "Multi Media", // Group
-  ["kdenlive"], // Repo
-  "org.kde.kdenlive", // Flatpak
-  "kdenlive", // Snap
-  { redhat: [] }, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["kdenlive"], { redhat: [] }), // Repo
+  new Flatpak("org.kde.kdenlive"), // Flatpak
+  new Snap("kdenlive", true, false), // Snap
   "kde" // DE
 );
 packages["rhythmbox"] = new Package(
   "RhythmBox", // Name
   "Music Player", // Description
   "Multi Media", // Group
-  ["rhythmbox"], // Repo
-  "org.gnome.Rhythmbox3", // Flatpak
-  "", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["rhythmbox"], {}), // Repo
+  new Flatpak("org.gnome.Rhythmbox3"), // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["shotwell"] = new Package(
   "Shotwell", // Name
-  "Photos", // Description
+  "Photo Viewer", // Description
   "Multi Media", // Group
-  ["shotwell"], // Repo
-  "org.gnome.Shotwell", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["shotwell"], { redhat: [] }), // Repo
+  new Flatpak("org.gnome.Shotwell"), // Flatpak
+  null, // Snap
   "gnome" // DE
+);
+packages["spotify"] = new Package(
+  "Spotify", // Name
+  "Music Streaming", // Description
+  "Multi Media", // Group
+  null, // Repo
+  null, // Flatpak
+  new Snap("spotify", true, false), // Snap
+  "kde" // DE
 );
 packages["totem"] = new Package(
   "Totem", // Name
-  "Gnome Video Player", // Description
+  "Video Player", // Description
   "Multi Media", // Group
-  ["totem"], // Repo
-  "org.gnome.Totem", // Flatpak
-  "", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["totem"], {}), // Repo
+  new Flatpak("org.gnome.Totem"), // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["vlc"] = new Package(
   "VLC", // Name
   "Media Player", // Description
   "Multi Media", // Group
-  ["vlc"], // Repo
-  "org.videolan.VLC", // Flatpak
-  "vlc", // Snap
-  {}, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["vlc"], {}), // Repo
+  new Flatpak("org.videolan.VLC"), // Flatpak
+  new Snap("vlc", true, false), // Snap
   "" // DE
 );
 
@@ -783,188 +574,155 @@ packages["code"] = new Package(
   "VS Code", // Name
   "Visual Studio Code", // Description
   "Editors", // Group
-  [], // Repo
-  "", // Flatpak
-  "code", // Snap
-  {}, // Repo Other
-  true, // Snap Official
-  true, // Snap Classic
+  null, // Repo
+  null, // Flatpak
+  new Snap("code", true, true), // Snap
   "" // DE
 );
 packages["codium"] = new Package(
   "Codium", // Name
   "FOSS Visual Studio Code", // Description
   "Editors", // Group
-  [], // Repo
-  "com.vscodium.codium", // Flatpak
-  "codium", // Snap
-  { pacman: ["code"] }, // Repo Other
-  false, // Snap Official
-  true, // Snap Classic
+  new Repo([], { pacman: ["code"] }), // Repo
+  new Flatpak("com.vscodium.codium"), // Flatpak
+  new Snap("codium", false, true), // Snap
   "" // DE
 );
 packages["gedit"] = new Package(
   "gedit", // Name
-  "Gnome Text Editor", // Description
+  "Text Editor", // Description
   "Editors", // Group
-  ["gedit"], // Repo
-  "org.gnome.gedit", // Flatpak
-  "", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gedit"], {}), // Repo
+  new Flatpak("org.gnome.gedit"), // Flatpak
+  new Snap("gedit", true, false), // Snap
   "gnome" // DE
 );
 packages["gnome-builder"] = new Package(
   "Gnome Builder", // Name
   "Gnome IDE", // Description
   "Editors", // Group
-  [], // Repo
-  "org.gnome.Builder", // Flatpak
-  "", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  null, // Repo
+  new Flatpak("org.gnome.Builder"), // Flatpak
+  null, // Snap
   "gnome" // DE
+);
+packages["gnome-text-editor"] = new Package(
+  "Gnome Text Editor", // Name
+  "Text Editor", // Description
+  "Editors", // Group
+  new Repo(["gnome-text-editor"], { debian: [], redhat: [] }), // Repo
+  new Flatpak("org.gnome.TextEditor"), // Flatpak
+  null, // Snap
+  "gnome" // DE
+);
+packages["intellij"] = new Package(
+  "Intellij Idea", // Name
+  "JetBrains Jave/Generic Editor", // Description
+  "Editors", // Group
+  null, // Repo
+  null, // Flatpak
+  new Snap("intellij-idea-community", true, true), // Snap
+  "" // DE
 );
 packages["kate"] = new Package(
   "Kate", // Name
-  "Text Editor", // Description
+  "KDE Advanced Text Editor", // Description
   "Editors", // Group
-  ["kate"], // Repo
-  "", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["kate"], { redhat: [] }), // Repo
+  null, // Flatpak
+  new Snap("kate", true, true), // Snap
   "kde" // DE
 );
 packages["kwrite"] = new Package(
   "KWrite", // Name
-  "KDE Text Editor", // Description
+  "Text Editor", // Description
   "Editors", // Group
-  ["kwrite"], // Repo
-  "org.kde.kwrite", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["kwrite"], { redhat: [] }), // Repo
+  new Flatpak("org.kde.kwrite"), // Flatpak
+  null, // Snap
   "kde" // DE
 );
 packages["kdevelop"] = new Package(
   "KDevelop", // Name
   "KDE IDE", // Description
   "Editors", // Group
-  ["kdevelop"], // Repo
-  "org.kde.kdevelop", // Flatpak
-  "kdevelop", // Snap
-  { redhat: [] }, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["kdevelop"], { redhat: [] }), // Repo
+  new Flatpak("org.kde.kdevelop"), // Flatpak
+  new Snap("kdevelop", true, false), // Snap
   "kde" // DE
 );
 packages["kile"] = new Package(
   "Kile", // Name
   "LaTex Editor", // Description
   "Editors", // Group
-  ["kile"], // Repo
-  "", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["kile"], { redhat: [] }), // Repo
+  null, // Flatpak
+  null, // Snap
   "kde" // DE
 );
 packages["libreoffice"] = new Package(
   "LibreOffice", // Name
   "Office Suite", // Description
   "Editors", // Group
-  [
-    "libreoffice-writer",
-    "libreoffice-calc",
-    "libreoffice-impress",
-    "libreoffice-draw",
-    "libreoffice-base",
-  ], // Repo
-  "org.libreoffice.LibreOffice", // Flatpak
-  "libreoffice", // Snap
-  { pacman: ["libreoffice-fresh"] }, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
-  "" // DE
-);
-packages["texstudio"] = new Package(
-  "TeX Studio", // Name
-  "LaTex Editor", // Description
-  "Editors", // Group
-  [], // Repo
-  "org.texstudio.TeXstudio", // Flatpak
-  "", // Snap
-  { pacman: ["texstudio"] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(
+    [
+      "libreoffice-writer",
+      "libreoffice-calc",
+      "libreoffice-impress",
+      "libreoffice-draw",
+      "libreoffice-base",
+    ],
+    { pacman: ["libreoffice-fresh"] }
+  ), // Repo
+  new Flatpak("org.libreoffice.LibreOffice"), // Flatpak
+  new Snap("libreoffice", true, false), // Snap
   "" // DE
 );
 packages["pycharm"] = new Package(
   "PyCharm", // Name
   "JetBrains Python Editor", // Description
   "Editors", // Group
-  [], // Repo
-  "com.jetbrains.PyCharm-Community", // Flatpak
-  "pycharm-community", // Snap
-  { pacman: ["pycharm-community-edition"] }, // Repo Other
-  true, // Snap Official
-  true, // Snap Classic
+  null, // Repo
+  null, // Flatpak
+  new Snap("pycharm-community", true, true), // Snap
   "" // DE
 );
 
 // Software Group
 packages["gnome-software"] = new Package(
   "Gnome Software", // Name
-  "", // Description
+  "App Store", // Description
   "Software", // Group
-  ["gnome-software"], // Repo
-  "", // Flatpak
-  "", // Snap
-  { pop: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-software"], { pop: [] }), // Repo
+  null, // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["plasma-discover"] = new Package(
   "Plasma Discover", // Name
-  "", // Description
+  "App Store", // Description
   "Software", // Group
-  ["plasma-discover"], // Repo
-  "", // Flatpak
-  "", // Snap
-  { pacman: ["discover"], redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["plasma-discover"], { pacman: ["discover"], redhat: [] }), // Repo
+  null, // Flatpak
+  null, // Snap
   "kde" // DE
 );
 packages["snap-store"] = new Package(
   "Snap Store", // Name
-  "", // Description
+  "App Store", // Description
   "Software", // Group
-  [], // Repo
-  "", // Flatpak
-  "snap-store", // Snap
-  {}, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  null, // Repo
+  null, // Flatpak
+  new Snap("snap-store", true, false), // Snap
   "" // DE
 );
 packages["synaptic"] = new Package(
   "Synaptic", // Name
   "Apt Software Manager", // Description
   "Software", // Group
-  [], // Repo
-  "", // Flatpak
-  "", // Snap
-  { apt: ["synaptic"] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo([], { apt: ["synaptic"] }), // Repo
+  null, // Flatpak
+  null, // Snap
   "" // DE
 );
 
@@ -973,132 +731,99 @@ packages["ark"] = new Package(
   "Ark", // Name
   "KDE Archiving Tool", // Description
   "Utilities", // Group
-  ["ark"], // Repo
-  "org.kde.ark", // Flatpak
-  "ark", // Snap
-  { redhat: [] }, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["ark"], { redhat: [] }), // Repo
+  new Flatpak("org.kde.ark"), // Flatpak
+  new Snap("ark", true, false), // Snap
   "kde" // DE
 );
 packages["baobab"] = new Package(
   "Baobab", // Name
   "Gnome Disk Usage", // Description
   "Utilities", // Group
-  ["baobab"], // Repo
-  "", // Flatpak
-  "", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["baobab"], {}), // Repo
+  new Flatpak("org.gnome.baobab"), // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["dconf-editor"] = new Package(
   "dconf editor", // Name
   "Gnome Environment Variables", // Description
   "Utilities", // Group
-  ["dconf-editor"], // Repo
-  "", // Flatpak
-  "", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["dconf-editor"], {}), // Repo
+  null, // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["filelight"] = new Package(
   "FileLight", // Name
   "KDE Disk Usage", // Description
   "Utilities", // Group
-  ["filelight"], // Repo
-  "", // Flatpak
-  "", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["filelight"], {}), // Repo
+  null, // Flatpak
+  null, // Snap
   "kde" // DE
 );
 packages["gnome-disk-utility"] = new Package(
   "Gnome Disk Utility", // Name
-  "", // Description
+  "Disk Utility", // Description
   "Utilities", // Group
-  ["gnome-disk-utility"], // Repo
-  "", // Flatpak
-  "", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-disk-utility"], {}), // Repo
+  null, // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["gnome-system-monitor"] = new Package(
   "Gnome System Monitor", // Name
-  "", // Description
+  "System Monitor", // Description
   "Utilities", // Group
-  ["gnome-system-monitor"], // Repo
-  "", // Flatpak
-  "", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-system-monitor"], {}), // Repo
+  null, // Flatpak
+  new Snap("gnome-system-monitor", true, false), // Snap
   "gnome" // DE
 );
 packages["gnome-tweaks"] = new Package(
   "Gnome Tweaks", // Name
-  "", // Description
+  "System Settings", // Description
   "Utilities", // Group
-  ["gnome-tweaks"], // Repo
-  "", // Flatpak
-  "", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["gnome-tweaks"], {}), // Repo
+  null, // Flatpak
+  null, // Snap
   "gnome" // DE
 );
 packages["ksysguard"] = new Package(
   "KSysGuard", // Name
   "KDE System Monitor", // Description
   "Utilities", // Group
-  ["ksysguard"], // Repo
-  "", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["ksysguard"], { redhat: [] }), // Repo
+  null, // Flatpak
+  null, // Snap
   "kde" // DE
 );
 packages["plasma-systemmonitor"] = new Package(
   "Plasma System Monitor", // Name
   "KDE System Monitor", // Description
   "Utilities", // Group
-  ["plasma-systemmonitor"], // Repo
-  "", // Flatpak
-  "", // Snap
-  { redhat: [] }, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["plasma-systemmonitor"], { redhat: [] }), // Repo
+  null, // Flatpak
+  null, // Snap
   "kde" // DE
 );
 packages["simple-scan"] = new Package(
   "Simple Scan", // Name
-  "", // Description
+  "Scan Application", // Description
   "Utilities", // Group
-  ["simple-scan"], // Repo
-  "", // Flatpak
-  "", // Snap
-  {}, // Repo Other
-  false, // Snap Official
-  false, // Snap Classic
+  new Repo(["simple-scan"], {}), // Repo
+  null, // Flatpak
+  null, // Snap
   "" // DE
 );
 packages["spectacle"] = new Package(
   "Spectacle", // Name
   "KDE Screenshot", // Description
   "Utilities", // Group
-  ["spectacle"], // Repo
-  "", // Flatpak
-  "spectacle", // Snap
-  { redhat: [] }, // Repo Other
-  true, // Snap Official
-  false, // Snap Classic
+  new Repo(["spectacle"], { redhat: [] }), // Repo
+  null, // Flatpak
+  new Snap("spectacle", true, false), // Snap
   "kde" // DE
 );
 

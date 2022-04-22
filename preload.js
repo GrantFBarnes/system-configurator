@@ -23,8 +23,12 @@ function installPackage(pkg, method) {
   return new Promise((resolve, reject) => {
     const package = packages[pkg];
     if (method === "repo") {
+      if (!package.repo) {
+        reject();
+        return;
+      }
       distribution
-        .install(package.getRepo(distribution))
+        .install(package.repo.getRepo(distribution))
         .then(() => {
           resolve();
         })
@@ -32,11 +36,15 @@ function installPackage(pkg, method) {
           reject();
         });
     } else if (method === "flatpak") {
+      if (!package.flatpak) {
+        reject();
+        return;
+      }
       backendCommands
         .hasCommand("flatpak")
         .then(() => {
           backendCommands.commands["flatpak-install"]
-            .run(package.flatpak)
+            .run(package.flatpak.name)
             .then(() => {
               resolve();
             })
@@ -49,7 +57,7 @@ function installPackage(pkg, method) {
             .installFlatpak()
             .then(() => {
               backendCommands.commands["flatpak-install"]
-                .run(package.flatpak)
+                .run(package.flatpak.name)
                 .then(() => {
                   resolve();
                 })
@@ -60,11 +68,15 @@ function installPackage(pkg, method) {
             .catch(() => {});
         });
     } else if (method === "snap") {
+      if (!package.snap) {
+        reject();
+        return;
+      }
       backendCommands
         .hasCommand("snap")
         .then(() => {
           backendCommands.commands["snap-install"]
-            .run(package.snap, package.snap_classic ? " --classic" : "")
+            .run(package.snap.name, package.snap.classic ? " --classic" : "")
             .then(() => {
               resolve();
             })
@@ -77,7 +89,10 @@ function installPackage(pkg, method) {
             .installSnap()
             .then(() => {
               backendCommands.commands["snap-install"]
-                .run(package.snap, package.snap_classic ? " --classic" : "")
+                .run(
+                  package.snap.name,
+                  package.snap.classic ? " --classic" : ""
+                )
                 .then(() => {
                   resolve();
                 })
@@ -95,8 +110,12 @@ function uninstallPackage(pkg, method) {
   return new Promise((resolve, reject) => {
     const package = packages[pkg];
     if (method === "repo") {
+      if (!package.repo) {
+        reject();
+        return;
+      }
       distribution
-        .uninstall(package.getRepo(distribution))
+        .uninstall(package.repo.getRepo(distribution))
         .then(() => {
           resolve();
         })
@@ -104,8 +123,12 @@ function uninstallPackage(pkg, method) {
           reject();
         });
     } else if (method === "flatpak") {
+      if (!package.flatpak) {
+        reject();
+        return;
+      }
       backendCommands.commands["flatpak-remove"]
-        .run(package.flatpak)
+        .run(package.flatpak.name)
         .then(() => {
           resolve();
         })
@@ -113,8 +136,12 @@ function uninstallPackage(pkg, method) {
           reject();
         });
     } else if (method === "snap") {
+      if (!package.snap) {
+        reject();
+        return;
+      }
       backendCommands.commands["snap-remove"]
-        .run(package.snap)
+        .run(package.snap.name)
         .then(() => {
           resolve();
         })
@@ -202,10 +229,10 @@ function selectPackage(pkg, method) {
 function getPackageButtonClassName(pkg, method) {
   let className = "button pkg-button pkg-button-" + method;
   if (method === "snap") {
-    if (packages[pkg].snap_official) {
-      className += "-official";
-    } else {
-      className += "-unofficial";
+    if (packages[pkg].snap) {
+      if (packages[pkg].snap.official) {
+        className += " pkg-button-snap-official";
+      }
     }
   }
   if (currentInstalled[pkg] !== method && selectedInstalls[pkg] !== method) {
@@ -274,8 +301,9 @@ function generateHTML() {
       const package = packages[pkg];
       let hasMethod = new Set();
 
-      const packageRepo = package.getRepo(distribution);
-      if (packageRepo && packageRepo.length) hasMethod.add("repo");
+      if (package.repo) {
+        if (package.repo.getRepo(distribution).length) hasMethod.add("repo");
+      }
       if (package.flatpak) hasMethod.add("flatpak");
       if (package.snap) hasMethod.add("snap");
 
@@ -286,7 +314,7 @@ function generateHTML() {
       pkgNameCell.innerHTML = package.name;
       pkgRow.appendChild(pkgNameCell);
       const pkgDescCell = document.createElement("td");
-      pkgDescCell.innerHTML = package.desc;
+      pkgDescCell.innerHTML = package.description;
       pkgRow.appendChild(pkgDescCell);
       for (let method of ["repo", "flatpak", "snap", ""]) {
         const pkgCell = document.createElement("td");
@@ -354,8 +382,8 @@ function getInstalledPackages() {
                 selectedInstalls[pkg] = "";
                 const package = packages[pkg];
 
-                const packageRepo = package.getRepo(distribution);
-                if (packageRepo) {
+                if (package.repo) {
+                  const packageRepo = package.repo.getRepo(distribution);
                   for (let r in packageRepo) {
                     if (installedRepo.indexOf(packageRepo[r]) >= 0) {
                       currentInstalled[pkg] = "repo";
@@ -365,13 +393,13 @@ function getInstalledPackages() {
                   }
                 }
                 if (package.flatpak) {
-                  if (installedFlatpaks.indexOf(package.flatpak) >= 0) {
+                  if (installedFlatpaks.indexOf(package.flatpak.name) >= 0) {
                     currentInstalled[pkg] = "flatpak";
                     selectedInstalls[pkg] = "flatpak";
                   }
                 }
                 if (package.snap) {
-                  if (installedSnaps.indexOf(package.snap) >= 0) {
+                  if (installedSnaps.indexOf(package.snap.name) >= 0) {
                     currentInstalled[pkg] = "snap";
                     selectedInstalls[pkg] = "snap";
                   }

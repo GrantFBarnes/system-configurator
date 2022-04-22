@@ -333,20 +333,17 @@ td {
   background-color: #42a5f5;
 }
 
-.pkg-button-snap-official {
+.pkg-button-snap {
   background-color: #9c27b0;
 }
 
-.pkg-button-snap-official:hover {
+.pkg-button-snap:hover {
   background-color: #ab47bc;
 }
 
-.pkg-button-snap-unofficial {
-  background-color: #ff5722;
-}
-
-.pkg-button-snap-unofficial:hover {
-  background-color: #ff5722;
+.pkg-button-snap-official {
+  border: 3px solid #40ff00;
+  color: #40ff00;
 }
 
 .pkg-button- {
