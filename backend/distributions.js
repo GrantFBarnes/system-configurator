@@ -57,26 +57,31 @@ class Distribution {
     });
   }
 
-  async setupFlatpak() {
+  async installFlatpak() {
     backendCommands
       .hasCommand("flatpak")
       .then(() => {
         backendCommands.commands["flatpak-remote-add"].run();
       })
-      .catch(() => {});
-  }
-
-  async installFlatpak() {
-    await this.install(["flatpak"]);
-    await this.setupFlatpak();
+      .catch(() => {
+        this.install(["flatpak"]).then(() => {
+          backendCommands.commands["flatpak-remote-add"].run();
+        });
+      });
   }
 
   async installSnap() {
-    await this.install(["snapd"]);
-    if (this.packageManager === "dnf") {
-      await backendCommands.commands["snap-systemd"].run();
-      await backendCommands.commands["snap-link"].run();
-    }
+    backendCommands
+      .hasCommand("snap")
+      .then(() => {})
+      .catch(() => {
+        this.install(["snapd"]).then(() => {
+          if (this.packageManager === "dnf") {
+            backendCommands.commands["snap-systemd"].run();
+            backendCommands.commands["snap-link"].run();
+          }
+        });
+      });
   }
 
   async update() {

@@ -314,7 +314,7 @@ packages["torbrowser"] = new Package(
   "TOR", // Name
   "The Onion Router", // Description
   "Browsers", // Group
-  new Repo(["torbrowser-launcher"], { redhat: [] }), // Repo
+  "", // Repo
   new Flatpak("com.github.micahflee.torbrowser-launcher"), // Flatpak
   null, // Snap
   "" // DE
@@ -648,7 +648,7 @@ packages["kdevelop"] = new Package(
   "Editors", // Group
   new Repo(["kdevelop"], { redhat: [] }), // Repo
   new Flatpak("org.kde.kdevelop"), // Flatpak
-  new Snap("kdevelop", true, false), // Snap
+  new Snap("kdevelop", true, true), // Snap
   "kde" // DE
 );
 packages["kile"] = new Package(
@@ -768,6 +768,15 @@ packages["gnome-disk-utility"] = new Package(
   "Disk Utility", // Description
   "Utilities", // Group
   new Repo(["gnome-disk-utility"], {}), // Repo
+  null, // Flatpak
+  null, // Snap
+  "gnome" // DE
+);
+packages["gnome-shell-extensions"] = new Package(
+  "Gnome Extensions", // Name
+  "System Settings", // Description
+  "Utilities", // Group
+  new Repo(["gnome-shell-extensions"], {}), // Repo
   null, // Flatpak
   null, // Snap
   "gnome" // DE

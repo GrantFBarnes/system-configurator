@@ -40,8 +40,8 @@ function installPackage(pkg, method) {
         reject();
         return;
       }
-      backendCommands
-        .hasCommand("flatpak")
+      distribution
+        .installFlatpak()
         .then(() => {
           backendCommands.commands["flatpak-install"]
             .run(package.flatpak.name)
@@ -52,28 +52,14 @@ function installPackage(pkg, method) {
               reject();
             });
         })
-        .catch(() => {
-          distribution
-            .installFlatpak()
-            .then(() => {
-              backendCommands.commands["flatpak-install"]
-                .run(package.flatpak.name)
-                .then(() => {
-                  resolve();
-                })
-                .catch(() => {
-                  reject();
-                });
-            })
-            .catch(() => {});
-        });
+        .catch(() => {});
     } else if (method === "snap") {
       if (!package.snap) {
         reject();
         return;
       }
-      backendCommands
-        .hasCommand("snap")
+      distribution
+        .installSnap()
         .then(() => {
           backendCommands.commands["snap-install"]
             .run(package.snap.name, package.snap.classic ? " --classic" : "")
@@ -84,24 +70,7 @@ function installPackage(pkg, method) {
               reject();
             });
         })
-        .catch(() => {
-          distribution
-            .installSnap()
-            .then(() => {
-              backendCommands.commands["snap-install"]
-                .run(
-                  package.snap.name,
-                  package.snap.classic ? " --classic" : ""
-                )
-                .then(() => {
-                  resolve();
-                })
-                .catch(() => {
-                  reject();
-                });
-            })
-            .catch(() => {});
-        });
+        .catch(() => {});
     }
   });
 }
@@ -157,13 +126,17 @@ async function syncPackages() {
   if (mainDiv) mainDiv.className = "blur";
   for (let pkg in selectedInstalls) {
     if (selectedInstalls[pkg] !== currentInstalled[pkg]) {
-      if (currentInstalled[pkg]) {
-        await uninstallPackage(pkg, currentInstalled[pkg]);
+      try {
+        if (currentInstalled[pkg]) {
+          await uninstallPackage(pkg, currentInstalled[pkg]);
+        }
+        if (selectedInstalls[pkg]) {
+          await installPackage(pkg, selectedInstalls[pkg]);
+        }
+        currentInstalled[pkg] = selectedInstalls[pkg];
+      } catch (err) {
+        alert("Failed to handle " + pkg);
       }
-      if (selectedInstalls[pkg]) {
-        await installPackage(pkg, selectedInstalls[pkg]);
-      }
-      currentInstalled[pkg] = selectedInstalls[pkg];
     }
   }
   if (mainDiv) mainDiv.className = "";
@@ -310,6 +283,11 @@ function generateHTML() {
       if (!hasMethod.size) continue;
 
       const pkgRow = document.createElement("tr");
+      if (package.de == "gnome") {
+        pkgRow.style.color = "#004d99";
+      } else if (package.de == "kde") {
+        pkgRow.style.color = "#009900";
+      }
       const pkgNameCell = document.createElement("td");
       pkgNameCell.innerHTML = package.name;
       pkgRow.appendChild(pkgNameCell);
