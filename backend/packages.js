@@ -123,7 +123,7 @@ packages["gnome-boxes"] = new Package(
   "Gnome Boxes", // Name
   "Virtual Machine Manager", // Description
   "Applications", // Group
-  new Repo(["gnome-boxes"], {}), // Repo
+  new Repo(["gnome-boxes"], { redhat: [] }), // Repo
   new Flatpak("org.gnome.Boxes"), // Flatpak
   null, // Snap
   "gnome" // DE
@@ -231,7 +231,7 @@ packages["transmission-gtk"] = new Package(
   "Transmission (GTK)", // Name
   "Torrent", // Description
   "Applications", // Group
-  new Repo(["transmission-gtk"], {}), // Repo
+  new Repo(["transmission-gtk"], { redhat: [] }), // Repo
   null, // Flatpak
   null, // Snap
   "gnome" // DE
@@ -527,7 +527,7 @@ packages["rhythmbox"] = new Package(
   "RhythmBox", // Name
   "Music Player", // Description
   "Multi Media", // Group
-  new Repo(["rhythmbox"], {}), // Repo
+  new Repo(["rhythmbox"], { redhat: [] }), // Repo
   new Flatpak("org.gnome.Rhythmbox3"), // Flatpak
   null, // Snap
   "gnome" // DE
@@ -563,7 +563,7 @@ packages["vlc"] = new Package(
   "VLC", // Name
   "Media Player", // Description
   "Multi Media", // Group
-  new Repo(["vlc"], {}), // Repo
+  new Repo(["vlc"], { redhat: [] }), // Repo
   new Flatpak("org.videolan.VLC"), // Flatpak
   new Snap("vlc", true, false), // Snap
   "" // DE
@@ -758,7 +758,7 @@ packages["filelight"] = new Package(
   "FileLight", // Name
   "KDE Disk Usage", // Description
   "Utilities", // Group
-  new Repo(["filelight"], {}), // Repo
+  new Repo(["filelight"], { redhat: [] }), // Repo
   null, // Flatpak
   null, // Snap
   "kde" // DE
@@ -776,7 +776,7 @@ packages["gnome-shell-extensions"] = new Package(
   "Gnome Extensions", // Name
   "System Settings", // Description
   "Utilities", // Group
-  new Repo(["gnome-shell-extensions"], {}), // Repo
+  new Repo(["gnome-shell-extensions"], { redhat: ["gnome-extensions-app"] }), // Repo
   null, // Flatpak
   null, // Snap
   "gnome" // DE
@@ -821,7 +821,7 @@ packages["simple-scan"] = new Package(
   "Simple Scan", // Name
   "Scan Application", // Description
   "Utilities", // Group
-  new Repo(["simple-scan"], {}), // Repo
+  new Repo(["simple-scan"], { redhat: [] }), // Repo
   null, // Flatpak
   null, // Snap
   "" // DE
