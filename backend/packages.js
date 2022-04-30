@@ -101,15 +101,6 @@ packages["evince"] = new Package(
   null, // Snap
   "gnome" // DE
 );
-packages["fedora-media-writer"] = new Package(
-  "Fedora Media Writer", // Name
-  "ISO Writer", // Description
-  "Applications", // Group
-  new Repo([], { fedora: ["mediawriter"] }), // Repo
-  new Flatpak("org.fedoraproject.MediaWriter"), // Flatpak
-  null, // Snap
-  "" // DE
-);
 packages["gnome-books"] = new Package(
   "Gnome Books", // Name
   "eBook Reader", // Description
@@ -437,7 +428,7 @@ packages["steam"] = new Package(
   "Games", // Group
   null, // Repo
   new Flatpak("com.valvesoftware.Steam"), // Flatpak
-  null, // Snap
+  new Snap("steam", true, false), // Snap
   "" // DE
 );
 packages["supertuxkart"] = new Package(
@@ -754,6 +745,15 @@ packages["dconf-editor"] = new Package(
   null, // Snap
   "gnome" // DE
 );
+packages["fedora-media-writer"] = new Package(
+  "Fedora Media Writer", // Name
+  "ISO Writer", // Description
+  "Utilities", // Group
+  new Repo([], { fedora: ["mediawriter"] }), // Repo
+  new Flatpak("org.fedoraproject.MediaWriter"), // Flatpak
+  null, // Snap
+  "" // DE
+);
 packages["filelight"] = new Package(
   "FileLight", // Name
   "KDE Disk Usage", // Description
@@ -833,6 +833,24 @@ packages["spectacle"] = new Package(
   new Repo(["spectacle"], { redhat: [] }), // Repo
   null, // Flatpak
   new Snap("spectacle", true, false), // Snap
+  "kde" // DE
+);
+packages["usb-creator-gtk"] = new Package(
+  "USB Creator", // Name
+  "GTK ISO Writer", // Description
+  "Utilities", // Group
+  new Repo(["usb-creator-gtk"], {}), // Repo
+  null, // Flatpak
+  null, // Snap
+  "gnome" // DE
+);
+packages["usb-creator-kde"] = new Package(
+  "USB Creator", // Name
+  "KDE ISO Writer", // Description
+  "Utilities", // Group
+  new Repo(["usb-creator-kde"], {}), // Repo
+  null, // Flatpak
+  null, // Snap
   "kde" // DE
 );
 
