@@ -55,13 +55,15 @@ td {
 
 /* Setting Command Output Properties */
 
-#bottom-display {
+#changes-display,
+#console-display {
   display: none;
   height: 200px;
   overflow-y: auto;
   color: white;
   background-color: black;
   position: fixed;
+  padding: 15px;
   left: 0;
   bottom: 40px;
   width: 100%;
@@ -71,6 +73,8 @@ td {
 /* Setting Footer Properties */
 
 #footer {
+  display: flex;
+  flex-wrap: wrap;
   height: 40px;
   color: white;
   background-color: #333;

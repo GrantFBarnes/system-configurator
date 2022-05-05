@@ -29,14 +29,33 @@ function checkPassword() {
   window.electron.checkPassword();
 }
 
-function toggleConsole() {
-  const bottomDisplay = document.getElementById("bottom-display");
-  if (!bottomDisplay) return;
+function toggleChanges() {
+  const consoleDisplay = document.getElementById("console-display");
+  if (!consoleDisplay) return;
+  consoleDisplay.style.display = "none";
 
-  if (bottomDisplay.style.display !== "block") {
-    bottomDisplay.style.display = "block";
+  const changesDisplay = document.getElementById("changes-display");
+  if (!changesDisplay) return;
+
+  if (changesDisplay.style.display !== "block") {
+    changesDisplay.style.display = "block";
   } else {
-    bottomDisplay.style.display = "none";
+    changesDisplay.style.display = "none";
+  }
+}
+
+function toggleConsole() {
+  const changesDisplay = document.getElementById("changes-display");
+  if (!changesDisplay) return;
+  changesDisplay.style.display = "none";
+
+  const consoleDisplay = document.getElementById("console-display");
+  if (!consoleDisplay) return;
+
+  if (consoleDisplay.style.display !== "block") {
+    consoleDisplay.style.display = "block";
+  } else {
+    consoleDisplay.style.display = "none";
   }
 }
 

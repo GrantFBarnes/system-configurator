@@ -11,10 +11,10 @@ const backendPackages = require("./backend/packages");
 var distribution = null;
 const packages = backendPackages.packages;
 const groups = backendPackages.groups;
-const hasGnome = backendDesktop.hasGnome;
-const hasKDE = backendDesktop.hasKDE;
+var showAllDE = false;
 var currentInstalled = {};
 var selectedInstalls = {};
+var pendingChanges = {};
 
 ////////////////////////////////////////////////////////////////////////////////
 // Package Functions
@@ -123,23 +123,23 @@ function uninstallPackage(pkg, method) {
 
 async function syncPackages() {
   const mainDiv = document.getElementById("main");
-  if (mainDiv) mainDiv.className = "blur";
-  for (let pkg in selectedInstalls) {
-    if (selectedInstalls[pkg] !== currentInstalled[pkg]) {
-      try {
-        if (currentInstalled[pkg]) {
-          await uninstallPackage(pkg, currentInstalled[pkg]);
-        }
-        if (selectedInstalls[pkg]) {
-          await installPackage(pkg, selectedInstalls[pkg]);
-        }
-        currentInstalled[pkg] = selectedInstalls[pkg];
-      } catch (err) {
-        alert("Failed to handle " + pkg);
+  const packages = Object.keys(pendingChanges);
+  for (let pkg of packages) {
+    if (mainDiv) mainDiv.className = "blur";
+    try {
+      if (pendingChanges[pkg].uninstall) {
+        await uninstallPackage(pkg, pendingChanges[pkg].uninstall);
       }
+      if (pendingChanges[pkg].install) {
+        await installPackage(pkg, pendingChanges[pkg].install);
+      }
+      delete pendingChanges[pkg];
+      currentInstalled[pkg] = selectedInstalls[pkg];
+      handlePackageChangeHTML(pkg);
+    } catch (err) {
+      alert("Failed to handle " + pkg);
     }
   }
-  if (mainDiv) mainDiv.className = "";
   generateHTML();
 }
 
@@ -180,24 +180,73 @@ async function autoremovePackages() {
 }
 
 function selectPackage(pkg, method) {
-  const oldMethod = selectedInstalls[pkg];
   selectedInstalls[pkg] = method;
 
-  const before = document.getElementById("pkg-button-" + oldMethod + "-" + pkg);
-  if (before) {
-    before.className = getPackageButtonClassName(pkg, oldMethod);
-    before.innerHTML = getPackageButtonInnerHTML(pkg, oldMethod);
+  if (selectedInstalls[pkg] === currentInstalled[pkg]) {
+    delete pendingChanges[pkg];
+  } else {
+    pendingChanges[pkg] = {};
+    if (currentInstalled[pkg]) {
+      pendingChanges[pkg].uninstall = currentInstalled[pkg];
+    }
+    if (selectedInstalls[pkg]) {
+      pendingChanges[pkg].install = selectedInstalls[pkg];
+    }
   }
 
-  const after = document.getElementById("pkg-button-" + method + "-" + pkg);
-  if (after) {
-    after.className = getPackageButtonClassName(pkg, method);
-    after.innerHTML = getPackageButtonInnerHTML(pkg, method);
-  }
+  handlePackageChangeHTML(pkg);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTML Functions
+
+function setChangesDisplayInnerHTML() {
+  const changesDisplay = document.getElementById("changes-display");
+  if (!changesDisplay) return;
+  changesDisplay.innerHTML = "";
+
+  const pendingChangesCount = Object.keys(pendingChanges).length;
+  const syncButton = document.getElementById("nav-link-sync-packages");
+  if (syncButton) syncButton.hidden = pendingChangesCount === 0;
+
+  if (pendingChangesCount === 0) {
+    changesDisplay.innerHTML = "There are no pending changes";
+    return;
+  }
+  changesDisplay.innerHTML = "The following changes are pending:<br />";
+
+  const table = document.createElement("table");
+  const headerRow = document.createElement("tr");
+  const th1 = document.createElement("th");
+  th1.innerHTML = "Package";
+  const th2 = document.createElement("th");
+  th2.innerHTML = "Install";
+  const th3 = document.createElement("th");
+  th3.innerHTML = "Uninstall";
+  headerRow.appendChild(th1);
+  headerRow.appendChild(th2);
+  headerRow.appendChild(th3);
+  table.appendChild(headerRow);
+
+  for (let pkg in pendingChanges) {
+    const pkgRow = document.createElement("tr");
+    const td1 = document.createElement("td");
+    td1.innerHTML = pkg;
+    const td2 = document.createElement("td");
+    if (pendingChanges[pkg].install) {
+      td2.innerHTML = pendingChanges[pkg].install;
+    }
+    const td3 = document.createElement("td");
+    if (pendingChanges[pkg].uninstall) {
+      td3.innerHTML = pendingChanges[pkg].uninstall;
+    }
+    pkgRow.appendChild(td1);
+    pkgRow.appendChild(td2);
+    pkgRow.appendChild(td3);
+    table.appendChild(pkgRow);
+  }
+  changesDisplay.appendChild(table);
+}
 
 function getPackageButtonClassName(pkg, method) {
   let className = "button pkg-button pkg-button-" + method;
@@ -229,11 +278,41 @@ function getPackageButtonInnerHTML(pkg, method) {
   return "<i class='fa fa-circle-o'></i>";
 }
 
+function handlePackageChangeHTML(pkg) {
+  setChangesDisplayInnerHTML();
+  for (let method of ["repo", "flatpak", "snap", ""]) {
+    const button = document.getElementById("pkg-button-" + method + "-" + pkg);
+    if (!button) continue;
+    button.className = getPackageButtonClassName(pkg, method);
+    button.innerHTML = getPackageButtonInnerHTML(pkg, method);
+  }
+}
+
 function generateHTML() {
   const mainDiv = document.getElementById("main");
   if (mainDiv) mainDiv.className = "blur";
   const contentDiv = document.getElementById("content");
   contentDiv.innerHTML = "";
+
+  const settingsDiv = document.createElement("div");
+  settingsDiv.class = "row";
+  const col12div = document.createElement("div");
+  col12div.class = "col-12";
+  const centerDiv = document.createElement("div");
+  centerDiv.class = "center";
+  centerDiv.innerHTML = "Show All DE Apps:";
+  const deInput = document.createElement("input");
+  deInput.type = "checkbox";
+  deInput.checked = showAllDE ? true : false;
+  deInput.onclick = () => {
+    showAllDE = !showAllDE;
+    generateHTML();
+  };
+  centerDiv.appendChild(deInput);
+  col12div.appendChild(centerDiv);
+  settingsDiv.appendChild(col12div);
+  contentDiv.appendChild(settingsDiv);
+
   const table = document.createElement("table");
   table.className = "center";
 
@@ -285,8 +364,14 @@ function generateHTML() {
       const pkgRow = document.createElement("tr");
       if (package.de == "gnome") {
         pkgRow.style.color = "#004d99";
+        if (!backendDesktop.hasGnome && !showAllDE) {
+          continue;
+        }
       } else if (package.de == "kde") {
         pkgRow.style.color = "#009900";
+        if (!backendDesktop.hasKDE && !showAllDE) {
+          continue;
+        }
       }
       const pkgNameCell = document.createElement("td");
       pkgNameCell.innerHTML = package.name;
@@ -311,6 +396,7 @@ function generateHTML() {
   }
   contentDiv.appendChild(table);
   if (mainDiv) mainDiv.className = "";
+  setChangesDisplayInnerHTML();
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Get Installed Functions

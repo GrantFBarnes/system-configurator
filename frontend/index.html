@@ -31,6 +31,7 @@
           id="nav-link-sync-packages"
           class="nav-link"
           onclick="syncPackages()"
+          hidden
         >
           Sync
         </a>
@@ -65,8 +66,10 @@
         </div>
       </div>
     </div>
-    <div id="bottom-display"></div>
+    <div id="changes-display"></div>
+    <div id="console-display"></div>
     <div id="footer">
+      <div class="footer-link" onclick="toggleChanges()">Changes</div>
       <div class="footer-link" onclick="toggleConsole()">Console</div>
     </div>
   </body>

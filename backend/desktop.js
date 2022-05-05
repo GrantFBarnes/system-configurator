@@ -3,21 +3,20 @@ const backendCommands = require("./commands");
 ////////////////////////////////////////////////////////////////////////////////
 // Define Functions
 
-var hasGnome = false;
-var hasKDE = false;
-
 backendCommands
   .hasCommand("gnome-shell")
   .then(() => {
-    hasGnome = true;
+    module.exports.hasGnome = true;
   })
-  .catch(() => {});
-backendCommands
-  .hasCommand("kwriteconfig5")
-  .then(() => {
-    hasKDE = true;
-  })
-  .catch(() => {});
+  .catch(() => {
+    module.exports.hasGnome = false;
+  });
 
-module.exports.hasGnome = hasGnome;
-module.exports.hasKDE = hasKDE;
+backendCommands
+  .hasCommand("plasmashell")
+  .then(() => {
+    module.exports.hasKDE = true;
+  })
+  .catch(() => {
+    module.exports.hasKDE = false;
+  });

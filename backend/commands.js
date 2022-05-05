@@ -27,16 +27,28 @@ class Command {
         command = "echo '" + password + "' | sudo -S -k " + command;
       }
 
-      process.exec(command, (error, stdout, stderr) => {
+      const event = process.exec(command, (error, stdout, stderr) => {
         if (error) {
-          if (print) displayOutput(print, stderr);
           reject(stderr);
           return;
         }
-        if (print) displayOutput(print, stdout);
         resolve(stdout);
         return;
       });
+
+      if (print) {
+        consoleDisplay(print, true);
+
+        event.stdout.setEncoding("utf8");
+        event.stdout.on("data", (data) => {
+          consoleDisplay(data);
+        });
+
+        event.stderr.setEncoding("utf8");
+        event.stderr.on("data", (data) => {
+          consoleDisplay(data);
+        });
+      }
     });
   }
 }
@@ -151,17 +163,21 @@ commands["flatpak-remote-add"] = new Command(
 ////////////////////////////////////////////////////////////////////////////////
 // Define Functions
 
-function displayOutput(command, output) {
-  const div = document.getElementById("bottom-display");
+function consoleDisplay(message, isCommand) {
+  const div = document.getElementById("console-display");
   if (!div) return;
 
-  const outputLines = output.split("\n");
   let divLines = div.innerHTML.split("\n");
-
-  divLines.push("############################################################");
-  divLines.push("$ " + command);
-  divLines.push("############################################################");
-  divLines = divLines.concat(outputLines);
+  if (isCommand) {
+    divLines.push("##########################################################");
+    divLines.push("$ " + message);
+    divLines.push("##########################################################");
+  } else {
+    let messageLines = message.split("\n");
+    messageLines = messageLines.map((i) => i.trim());
+    messageLines = messageLines.filter((i) => i);
+    divLines = divLines.concat(messageLines);
+  }
   while (divLines.length > 10000) {
     divLines.shift();
   }
