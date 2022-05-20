@@ -588,11 +588,20 @@ packages["gedit"] = new Package(
   new Snap("gedit", true, false), // Snap
   "gnome" // DE
 );
+packages["gitg"] = new Package(
+  "gitg", // Name
+  "git GUI", // Description
+  "Editors", // Group
+  new Repo(["gitg"], {}), // Repo
+  new Flatpak("org.gnome.gitg"), // Flatpak
+  null, // Snap
+  "gnome" // DE
+);
 packages["gnome-builder"] = new Package(
   "Gnome Builder", // Name
   "Gnome IDE", // Description
   "Editors", // Group
-  null, // Repo
+  new Repo(["gnome-builder"], { redhat: [] }), // Repo
   new Flatpak("org.gnome.Builder"), // Flatpak
   null, // Snap
   "gnome" // DE
@@ -676,6 +685,15 @@ packages["pycharm"] = new Package(
   null, // Repo
   null, // Flatpak
   new Snap("pycharm-community", true, true), // Snap
+  "" // DE
+);
+packages["texstudio"] = new Package(
+  "TexStudio", // Name
+  "LaTex Editor", // Description
+  "Editors", // Group
+  new Repo(["texstudio"], { redhat: [] }), // Repo
+  new Flatpak("org.texstudio.TeXstudio"), // Flatpak
+  null, // Snap
   "" // DE
 );
 
