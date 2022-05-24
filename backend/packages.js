@@ -794,7 +794,7 @@ packages["gnome-shell-extensions"] = new Package(
   "Gnome Extensions", // Name
   "System Settings", // Description
   "Utilities", // Group
-  new Repo(["gnome-shell-extensions"], { redhat: ["gnome-extensions-app"] }), // Repo
+  new Repo(["gnome-shell-extensions"], { dnf: ["gnome-extensions-app"] }), // Repo
   null, // Flatpak
   null, // Snap
   "gnome" // DE
