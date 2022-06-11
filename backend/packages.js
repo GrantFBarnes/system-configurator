@@ -150,7 +150,7 @@ packages["gnome-connections"] = new Package(
   "Gnome Connections", // Name
   "Network Connection Manager", // Description
   "Applications", // Group
-  new Repo(["gnome-connections"], { debian: [], redhat: [] }), // Repo
+  new Repo(["gnome-connections"], { debian: [] }), // Repo
   new Flatpak("org.gnome.Connections"), // Flatpak
   null, // Snap
   "gnome" // DE
@@ -204,7 +204,7 @@ packages["kcalc"] = new Package(
   "KCalc", // Name
   "Calculator", // Description
   "Applications", // Group
-  new Repo(["kcalc"], { redhat: [] }), // Repo
+  new Repo(["kcalc"], {}), // Repo
   new Flatpak("org.kde.kcalc"), // Flatpak
   new Snap("kcalc", true, false), // Snap
   "kde" // DE
@@ -390,7 +390,7 @@ packages["kmines"] = new Package(
   "KMines", // Name
   "Mines", // Description
   "Games", // Group
-  new Repo(["kmines"], { redhat: [] }), // Repo
+  new Repo(["kmines"], {}), // Repo
   null, // Flatpak
   new Snap("kmines", true, false), // Snap
   "kde" // DE
@@ -408,7 +408,7 @@ packages["ksudoku"] = new Package(
   "KSudoku", // Name
   "Sudoku", // Description
   "Games", // Group
-  new Repo(["ksudoku"], { redhat: [] }), // Repo
+  new Repo(["ksudoku"], {}), // Repo
   new Flatpak("org.kde.ksudoku"), // Flatpak
   new Snap("ksudoku", true, false), // Snap
   "kde" // DE
@@ -554,7 +554,7 @@ packages["vlc"] = new Package(
   "VLC", // Name
   "Media Player", // Description
   "Multi Media", // Group
-  new Repo(["vlc"], { redhat: [] }), // Repo
+  new Repo(["vlc"], {}), // Repo
   new Flatpak("org.videolan.VLC"), // Flatpak
   new Snap("vlc", true, false), // Snap
   "" // DE
@@ -592,7 +592,7 @@ packages["gitg"] = new Package(
   "gitg", // Name
   "git GUI", // Description
   "Editors", // Group
-  new Repo(["gitg"], {}), // Repo
+  new Repo(["gitg"], { redhat: [] }), // Repo
   new Flatpak("org.gnome.gitg"), // Flatpak
   null, // Snap
   "gnome" // DE
@@ -628,7 +628,7 @@ packages["kate"] = new Package(
   "Kate", // Name
   "KDE Advanced Text Editor", // Description
   "Editors", // Group
-  new Repo(["kate"], { redhat: [] }), // Repo
+  new Repo(["kate"], {}), // Repo
   null, // Flatpak
   new Snap("kate", true, true), // Snap
   "kde" // DE
@@ -637,7 +637,7 @@ packages["kwrite"] = new Package(
   "KWrite", // Name
   "Text Editor", // Description
   "Editors", // Group
-  new Repo(["kwrite"], { redhat: [] }), // Repo
+  new Repo(["kwrite"], {}), // Repo
   new Flatpak("org.kde.kwrite"), // Flatpak
   null, // Snap
   "kde" // DE
@@ -740,7 +740,7 @@ packages["ark"] = new Package(
   "Ark", // Name
   "KDE Archiving Tool", // Description
   "Utilities", // Group
-  new Repo(["ark"], { redhat: [] }), // Repo
+  new Repo(["ark"], {}), // Repo
   new Flatpak("org.kde.ark"), // Flatpak
   new Snap("ark", true, false), // Snap
   "kde" // DE
@@ -776,7 +776,7 @@ packages["filelight"] = new Package(
   "FileLight", // Name
   "KDE Disk Usage", // Description
   "Utilities", // Group
-  new Repo(["filelight"], { redhat: [] }), // Repo
+  new Repo(["filelight"], {}), // Repo
   null, // Flatpak
   null, // Snap
   "kde" // DE
@@ -821,7 +821,7 @@ packages["ksysguard"] = new Package(
   "KSysGuard", // Name
   "KDE System Monitor", // Description
   "Utilities", // Group
-  new Repo(["ksysguard"], { redhat: [] }), // Repo
+  new Repo(["ksysguard"], {}), // Repo
   null, // Flatpak
   null, // Snap
   "kde" // DE
@@ -830,7 +830,7 @@ packages["plasma-systemmonitor"] = new Package(
   "Plasma System Monitor", // Name
   "KDE System Monitor", // Description
   "Utilities", // Group
-  new Repo(["plasma-systemmonitor"], { redhat: [] }), // Repo
+  new Repo(["plasma-systemmonitor"], {}), // Repo
   null, // Flatpak
   null, // Snap
   "kde" // DE
@@ -848,7 +848,7 @@ packages["spectacle"] = new Package(
   "Spectacle", // Name
   "KDE Screenshot", // Description
   "Utilities", // Group
-  new Repo(["spectacle"], { redhat: [] }), // Repo
+  new Repo(["spectacle"], {}), // Repo
   null, // Flatpak
   new Snap("spectacle", true, false), // Snap
   "kde" // DE
@@ -857,7 +857,7 @@ packages["usb-creator-gtk"] = new Package(
   "USB Creator", // Name
   "GTK ISO Writer", // Description
   "Utilities", // Group
-  new Repo(["usb-creator-gtk"], {}), // Repo
+  new Repo(["usb-creator-gtk"], { redhat: [] }), // Repo
   null, // Flatpak
   null, // Snap
   "gnome" // DE
@@ -866,7 +866,7 @@ packages["usb-creator-kde"] = new Package(
   "USB Creator", // Name
   "KDE ISO Writer", // Description
   "Utilities", // Group
-  new Repo(["usb-creator-kde"], {}), // Repo
+  new Repo(["usb-creator-kde"], { redhat: [] }), // Repo
   null, // Flatpak
   null, // Snap
   "kde" // DE
