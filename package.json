@@ -20,9 +20,8 @@
       "grade": "stable"
     }
   },
-  "dependencies": {},
   "devDependencies": {
-    "electron": "^18.0.0",
+    "electron": "~19.0.12",
     "electron-builder": "^23.0.3"
   }
 }
