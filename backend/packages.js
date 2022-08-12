@@ -60,7 +60,7 @@ packages["bitwarden"] = new Package(
   "Bitwarden", // Name
   "Password Manager", // Description
   "Applications", // Group
-  null, // Repo
+  new Repo([], { arch: ["bitwarden"] }), // Repo
   null, // Flatpak
   new Snap("bitwarden", true, false), // Snap
   "" // DE
@@ -247,15 +247,6 @@ packages["virt-manager"] = new Package(
 );
 
 // Browsers Group
-packages["brave"] = new Package(
-  "Brave", // Name
-  "Privary Browser", // Description
-  "Browsers", // Group
-  null, // Repo
-  new Flatpak("com.brave.Browser"), // Flatpak
-  new Snap("brave", false, false), // Snap
-  "" // DE
-);
 packages["chromium"] = new Package(
   "Chromium", // Name
   "Google Base Browser", // Description
@@ -305,7 +296,7 @@ packages["torbrowser"] = new Package(
   "TOR", // Name
   "The Onion Router", // Description
   "Browsers", // Group
-  "", // Repo
+  new Repo([], { arch: ["torbrowser-launcher"] }), // Repo
   new Flatpak("com.github.micahflee.torbrowser-launcher"), // Flatpak
   null, // Snap
   "" // DE
@@ -316,7 +307,7 @@ packages["discord"] = new Package(
   "Discord", // Name
   "Gaming Chat", // Description
   "Communication", // Group
-  null, // Repo
+  new Repo([], { arch: ["discord"] }), // Repo
   new Flatpak("com.discordapp.Discord"), // Flatpak
   new Snap("discord", false, false), // Snap
   "" // DE
@@ -426,7 +417,7 @@ packages["steam"] = new Package(
   "Steam", // Name
   "Steam Client", // Description
   "Games", // Group
-  null, // Repo
+  new Repo([], { arch: ["steam"] }), // Repo
   new Flatpak("com.valvesoftware.Steam"), // Flatpak
   new Snap("steam", true, false), // Snap
   "" // DE
@@ -444,7 +435,7 @@ packages["xonotic"] = new Package(
   "Xonotic", // Name
   "FPS", // Description
   "Games", // Group
-  new Repo([], { fedora: ["xonotic"] }), // Repo
+  new Repo([], { arch: ["xonotic"], fedora: ["xonotic"] }), // Repo
   new Flatpak("org.xonotic.Xonotic"), // Flatpak
   new Snap("xonotic", false, false), // Snap
   "" // DE
@@ -532,15 +523,6 @@ packages["shotwell"] = new Package(
   null, // Snap
   "gnome" // DE
 );
-packages["spotify"] = new Package(
-  "Spotify", // Name
-  "Music Streaming", // Description
-  "Multi Media", // Group
-  null, // Repo
-  null, // Flatpak
-  new Snap("spotify", true, false), // Snap
-  "kde" // DE
-);
 packages["totem"] = new Package(
   "Totem", // Name
   "Video Player", // Description
@@ -619,7 +601,7 @@ packages["intellij"] = new Package(
   "Intellij Idea", // Name
   "JetBrains Jave/Generic Editor", // Description
   "Editors", // Group
-  null, // Repo
+  new Repo([], { arch: ["intellij-idea-community-edition"] }), // Repo
   null, // Flatpak
   new Snap("intellij-idea-community", true, true), // Snap
   "" // DE
@@ -682,7 +664,7 @@ packages["pycharm"] = new Package(
   "PyCharm", // Name
   "JetBrains Python Editor", // Description
   "Editors", // Group
-  null, // Repo
+  new Repo([], { arch: ["pycharm-community-edition"] }), // Repo
   null, // Flatpak
   new Snap("pycharm-community", true, true), // Snap
   "" // DE
@@ -857,7 +839,7 @@ packages["usb-creator-gtk"] = new Package(
   "USB Creator", // Name
   "GTK ISO Writer", // Description
   "Utilities", // Group
-  new Repo(["usb-creator-gtk"], { redhat: [] }), // Repo
+  new Repo([], { ubuntu: ["usb-creator-gtk"] }), // Repo
   null, // Flatpak
   null, // Snap
   "gnome" // DE
@@ -866,7 +848,7 @@ packages["usb-creator-kde"] = new Package(
   "USB Creator", // Name
   "KDE ISO Writer", // Description
   "Utilities", // Group
-  new Repo(["usb-creator-kde"], { redhat: [] }), // Repo
+  new Repo([], { ubuntu: ["usb-creator-kde"] }), // Repo
   null, // Flatpak
   null, // Snap
   "kde" // DE
