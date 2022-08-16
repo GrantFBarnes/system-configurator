@@ -56,15 +56,6 @@ class Snap {
 var packages = {};
 
 // Applications Group
-packages["bitwarden"] = new Package(
-  "Bitwarden", // Name
-  "Password Manager", // Description
-  "Applications", // Group
-  new Repo([], { arch: ["bitwarden"] }), // Repo
-  null, // Flatpak
-  new Snap("bitwarden", true, false), // Snap
-  "" // DE
-);
 packages["cheese"] = new Package(
   "Cheese", // Name
   "Webcam", // Description
@@ -602,7 +593,7 @@ packages["intellij"] = new Package(
   "JetBrains Jave/Generic Editor", // Description
   "Editors", // Group
   new Repo([], { arch: ["intellij-idea-community-edition"] }), // Repo
-  null, // Flatpak
+  new Flatpak("com.jetbrains.IntelliJ-IDEA-Community"), // Flatpak
   new Snap("intellij-idea-community", true, true), // Snap
   "" // DE
 );
@@ -665,7 +656,7 @@ packages["pycharm"] = new Package(
   "JetBrains Python Editor", // Description
   "Editors", // Group
   new Repo([], { arch: ["pycharm-community-edition"] }), // Repo
-  null, // Flatpak
+  new Flatpak("com.jetbrains.PyCharm-Community"), // Flatpak
   new Snap("pycharm-community", true, true), // Snap
   "" // DE
 );
