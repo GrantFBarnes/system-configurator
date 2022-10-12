@@ -146,6 +146,15 @@ packages["gnome-connections"] = new Package(
   null, // Snap
   "gnome" // DE
 );
+packages["gnome-contacts"] = new Package(
+  "Gnome Contacts", // Name
+  "Contact Manager", // Description
+  "Applications", // Group
+  new Repo(["gnome-contacts"], { redhat: [] }), // Repo
+  new Flatpak("org.gnome.Contacts"), // Flatpak
+  null, // Snap
+  "gnome" // DE
+);
 packages["gnome-maps"] = new Package(
   "Gnome Maps", // Name
   "Maps", // Description
@@ -159,7 +168,7 @@ packages["gnome-passwordsafe"] = new Package(
   "Gnome Password Safe", // Name
   "Password Manager", // Description
   "Applications", // Group
-  new Repo(["gnome-passwordsafe"], { redhat: [] }), // Repo
+  new Repo(["gnome-passwordsafe"], { fedora: ["secrets"], redhat: [] }), // Repo
   new Flatpak("org.gnome.PasswordSafe"), // Flatpak
   null, // Snap
   "gnome" // DE
@@ -287,7 +296,10 @@ packages["torbrowser"] = new Package(
   "TOR", // Name
   "The Onion Router", // Description
   "Browsers", // Group
-  new Repo([], { arch: ["torbrowser-launcher"] }), // Repo
+  new Repo([], {
+    arch: ["torbrowser-launcher"],
+    fedora: ["torbrowser-launcher"],
+  }), // Repo
   new Flatpak("com.github.micahflee.torbrowser-launcher"), // Flatpak
   null, // Snap
   "" // DE
